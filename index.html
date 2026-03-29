@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parts of Speech Quiz | Al-Mustaqbal University</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Pro:wght@400;600&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4AF37;--gold-dim:#8B722A;--gold-light:#F0D060;
+  --deep:#040714;--card:rgba(15,20,55,0.88);
+  --white:#F5F0E8;--gray:#8891AA;
+  --correct:#27AE60;--wrong:#E74C3C;
+  --cbg:rgba(39,174,96,0.18);--wbg:rgba(231,76,60,0.18);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Crimson Pro',Georgia,serif;background:var(--deep);color:var(--white);min-height:100vh;overflow-x:hidden}
+#cvs{position:fixed;inset:0;pointer-events:none;z-index:0}
+.nb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:nf 12s ease-in-out infinite}
+.nb1{width:480px;height:480px;background:rgba(100,60,200,.12);top:-80px;left:-80px}
+.nb2{width:400px;height:400px;background:rgba(212,175,55,.08);bottom:-80px;right:-80px;animation-delay:-6s}
+.nb3{width:340px;height:340px;background:rgba(30,80,200,.1);top:45%;left:58%;animation-delay:-3s}
+@keyframes nf{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(22px,-22px) scale(1.07)}}
+.scr{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;animation:fi .5s ease}
+.hidden{display:none!important}
+@keyframes fi{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border:1px solid rgba(212,175,55,.25);border-radius:20px;backdrop-filter:blur(18px);box-shadow:0 24px 72px rgba(0,0,0,.5);padding:48px 44px;max-width:660px;width:100%}
+.badge{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:28px}
+.badge .uni{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gray)}
+.badge .dept{font-size:15px;color:var(--gold);letter-spacing:1px;text-align:center}
+.gline{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:6px auto}
+/* TG */
+#tg-scr .card{text-align:center}
+.tgico{font-size:78px;margin:18px 0;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.tgtitle{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;color:var(--gold);margin-bottom:10px}
+.tgsub{font-size:1.05rem;color:var(--gray);line-height:1.7;margin-bottom:28px}
+.tgcount{font-family:'Playfair Display',serif;font-size:3.4rem;font-weight:900;color:var(--gold);margin:18px 0}
+.tglbl{font-size:.85rem;color:var(--gray);letter-spacing:2px;text-transform:uppercase}
+.btntg{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#229ED9,#1a7bb0);color:#fff;border:none;border-radius:50px;padding:15px 34px;font-size:1.05rem;font-family:'Crimson Pro',serif;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 8px 28px rgba(34,158,217,.4);transition:transform .3s}
+.btntg:hover{transform:translateY(-3px)}
+/* LOGIN */
+#lg-scr .card{text-align:center}
+.ltitle{font-family:'Playfair Display',serif;font-size:1.95rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+.lsub{color:var(--gray);font-size:1rem;margin-bottom:30px;line-height:1.65}
+.iw{margin-bottom:22px;text-align:left}
+.iw label{display:block;font-size:.82rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:7px}
+.iw input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:15px 18px;color:var(--white);font-family:'Crimson Pro',serif;font-size:1.1rem;transition:all .3s;outline:none}
+.iw input:focus{border-color:var(--gold);background:rgba(212,175,55,.08);box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+.iw input::placeholder{color:rgba(136,145,170,.6)}
+.nhint{font-size:.8rem;color:var(--gray);margin-top:5px;text-align:right}
+.nerr{font-size:.85rem;color:var(--wrong);margin-top:5px;display:none}
+.btnp{width:100%;background:linear-gradient(135deg,var(--gold),#B8960C);color:var(--deep);border:none;border-radius:12px;padding:16px;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(212,175,55,.35);transition:all .3s}
+.btnp:hover{transform:translateY(-2px)}
+.btnp:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.pills{display:flex;gap:18px;margin-top:22px}
+.pill{flex:1;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);border-radius:10px;padding:11px 14px;text-align:center}
+.pill .n{font-family:'Playfair Display',serif;font-size:1.75rem;color:var(--gold);font-weight:700}
+.pill .l{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+/* QUIZ */
+#qz-scr{padding:20px;flex-direction:column}
+.qtop{position:relative;z-index:1;width:100%;max-width:750px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:0 4px}
+.qctr{font-size:.88rem;color:var(--gray);letter-spacing:1px}
+.qctr span{color:var(--gold);font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700}
+.twrap{display:flex;align-items:center;gap:7px}
+.tdisp{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);font-weight:700;min-width:58px;text-align:right}
+.tdisp.warn{color:var(--wrong);animation:blink .8s linear infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.pbar{width:100%;max-width:750px;height:5px;background:rgba(255,255,255,.1);border-radius:10px;margin-bottom:22px;z-index:1;position:relative}
+.pfill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--gold-dim),var(--gold));transition:width .5s ease}
+.qcard{background:var(--card);border:1px solid rgba(212,175,55,.2);border-radius:20px;backdrop-filter:blur(18px);box-shadow:0 18px 56px rgba(0,0,0,.4);padding:40px 42px;max-width:750px;width:100%;position:relative;z-index:1}
+.ttag{display:inline-block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);border:1px solid rgba(212,175,55,.2);border-radius:20px;padding:4px 13px;margin-bottom:16px}
+.qtxt{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:400;line-height:1.65;color:var(--white);margin-bottom:28px}
+.opts{display:flex;flex-direction:column;gap:11px}
+.opt{background:rgba(255,255,255,.05);border:1.5px solid rgba(212,175,55,.18);border-radius:13px;padding:15px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .25s;text-align:left;width:100%;color:var(--white);font-family:'Crimson Pro',serif;font-size:1.05rem}
+.opt:hover:not(.lk){background:rgba(212,175,55,.1);border-color:rgba(212,175,55,.5);transform:translateX(4px)}
+.ol{min-width:31px;height:31px;border-radius:8px;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--gold);transition:all .25s;flex-shrink:0}
+.opt.cr{background:var(--cbg)!important;border-color:var(--correct)!important}
+.opt.cr .ol{background:var(--correct);color:#fff;border-color:var(--correct)}
+.opt.wr{background:var(--wbg)!important;border-color:var(--wrong)!important}
+.opt.wr .ol{background:var(--wrong);color:#fff;border-color:var(--wrong)}
+.opt.lk{cursor:default}
+.fbar{min-height:40px;margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.fmsg{font-size:.97rem;color:var(--gray)}
+.fmsg.cr{color:var(--correct)}
+.fmsg.wr{color:var(--wrong)}
+.btnn{background:linear-gradient(135deg,var(--gold),#B8960C);color:var(--deep);border:none;border-radius:10px;padding:12px 28px;font-family:'Playfair Display',serif;font-size:.97rem;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(212,175,55,.3);transition:all .25s;opacity:0;pointer-events:none}
+.btnn.vis{opacity:1;pointer-events:all}
+.btnn:hover{transform:translateY(-2px)}
+/* RESULTS */
+#rs-scr{flex-direction:column;padding:28px 20px}
+.rcard{background:var(--card);border:1px solid rgba(212,175,55,.25);border-radius:20px;backdrop-filter:blur(18px);box-shadow:0 24px 72px rgba(0,0,0,.5);padding:48px 44px;max-width:820px;width:100%;position:relative;z-index:1}
+.rhdr{text-align:center;margin-bottom:36px}
+.rtitle{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+.rsname{font-size:1.05rem;color:var(--gray);margin-bottom:26px}
+.ring-wrap{position:relative;width:155px;height:155px;margin:0 auto 26px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.rbg{fill:none;stroke:rgba(212,175,55,.12);stroke-width:10}
+.rfill{fill:none;stroke:var(--gold);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1)}
+.rctr{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.rpct{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold)}
+.rpct-sym{font-size:1.1rem;color:var(--gold-dim)}
+.srow{display:flex;gap:14px;margin-bottom:32px}
+.sb{flex:1;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.08);padding:18px 14px;text-align:center}
+.sb .sn{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700}
+.sb .sl{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px}
+.sb.g .sn{color:var(--correct)}
+.sb.r .sn{color:var(--wrong)}
+.sb.o .sn{color:var(--gold)}
+.gbadge{display:inline-block;font-family:'Playfair Display',serif;font-size:.97rem;padding:8px 22px;border-radius:30px;margin-bottom:18px;font-weight:700;letter-spacing:1px}
+.gA{background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.5);color:var(--correct)}
+.gB{background:rgba(212,175,55,.2);border:1px solid rgba(212,175,55,.5);color:var(--gold)}
+.gC{background:rgba(231,76,60,.2);border:1px solid rgba(231,76,60,.5);color:var(--wrong)}
+.wsec{margin-top:8px}
+.wstitle{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--gold);margin-bottom:16px;padding-bottom:11px;border-bottom:1px solid rgba(212,175,55,.2)}
+.wi{background:rgba(231,76,60,.07);border:1px solid rgba(231,76,60,.2);border-radius:15px;padding:20px 22px;margin-bottom:18px;animation:fi .4s ease}
+.wiq{font-size:1rem;color:var(--white);margin-bottom:12px;line-height:1.6}
+.wiq strong{color:var(--gold-dim);font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px}
+.wians{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.wia{padding:7px 14px;border-radius:8px;font-size:.9rem;border:1px solid transparent}
+.wia.uw{background:var(--wbg);border-color:rgba(231,76,60,.4);color:var(--wrong)}
+.wia.ca{background:var(--cbg);border-color:rgba(39,174,96,.4);color:var(--correct)}
+.wia-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;display:block;opacity:.7;margin-bottom:1px}
+.exp-sec{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.exp-hdr{font-size:.67rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.exp-hdr::before,.exp-hdr::after{content:'';flex:1;height:1px}
+.exp-hdr.wh{color:rgba(231,76,60,.85)}
+.exp-hdr.wh::before,.exp-hdr.wh::after{background:rgba(231,76,60,.25)}
+.exp-hdr.ch{color:rgba(39,174,96,.9)}
+.exp-hdr.ch::before,.exp-hdr.ch::after{background:rgba(39,174,96,.25)}
+.exp-wb{background:rgba(231,76,60,.07);border:1px solid rgba(231,76,60,.25);border-left:3px solid var(--wrong);border-radius:10px;padding:13px 17px;display:flex;flex-direction:column;gap:9px}
+.exp-wen{font-family:'Crimson Pro',serif;font-size:.96rem;color:rgba(255,200,200,.92);line-height:1.7;padding-bottom:9px;border-bottom:1px solid rgba(231,76,60,.15)}
+.exp-war{font-family:'Noto Naskh Arabic',serif;font-size:1.02rem;color:rgba(255,185,185,.88);line-height:1.9;text-align:right;direction:rtl}
+.exp-cb{background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.25);border-left:3px solid var(--correct);border-radius:10px;padding:13px 17px;display:flex;flex-direction:column;gap:9px}
+.exp-cen{font-family:'Crimson Pro',serif;font-size:.96rem;color:rgba(200,255,220,.92);line-height:1.7;padding-bottom:9px;border-bottom:1px solid rgba(39,174,96,.15)}
+.exp-car{font-family:'Noto Naskh Arabic',serif;font-size:1.02rem;color:rgba(185,255,205,.88);line-height:1.9;text-align:right;direction:rtl}
+.rftr{text-align:center;margin-top:32px}
+.btnr{background:transparent;border:2px solid var(--gold);color:var(--gold);border-radius:12px;padding:14px 38px;font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .28s;letter-spacing:.5px}
+.btnr:hover{background:var(--gold);color:var(--deep)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:4px}
+@media(max-width:600px){.card,.qcard,.rcard{padding:24px 16px}.qtxt{font-size:1.05rem}.srow{flex-wrap:wrap}.sb{min-width:calc(50% - 7px)}}
+</style>
+</head>
+<body>
+<canvas id="cvs"></canvas>
+<div class="nb nb1"></div>
+<div class="nb nb2"></div>
+<div class="nb nb3"></div>
+
+<!-- TELEGRAM -->
+<div id="tg-scr" class="scr hidden">
+  <div class="card">
+    <div class="badge">
+      <span class="uni">Al-Mustaqbal University &middot; Babylon</span>
+      <div class="gline"></div>
+      <span class="dept">Department of English Language</span>
+    </div>
+    <div class="tgico">📢</div>
+    <div class="tgtitle">Join Our Channel First</div>
+    <div class="tgsub">Please join the official Telegram channel of the English Language Department before accessing the quiz.</div>
+    <div class="tgcount" id="tgNum">5</div>
+    <div class="tglbl">Redirecting in seconds…</div><br>
+    <a href="https://t.me/vgsscwe" target="_blank" class="btntg">✈️ &nbsp;Join Telegram Channel</a><br>
+    <div style="font-size:.83rem;color:var(--gray);margin-top:11px;">You will be redirected to login automatically.</div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="lg-scr" class="scr hidden">
+  <div class="card">
+    <div class="badge">
+      <span class="uni">Al-Mustaqbal University &middot; Babylon &middot; 2025–2026</span>
+      <div class="gline"></div>
+      <span class="dept">Department of English Language — Grammar Quiz</span>
+    </div>
+    <div class="ltitle">Parts of Speech</div>
+    <div class="lsub">Form Classes &amp; Structure Classes<br>Enter your full four-part name to begin.</div>
+    <div class="iw">
+      <label>Full Name / الاسم الرباعي</label>
+      <input type="text" id="nameIn" placeholder="e.g. Ahmed Ali Hassan Mohammed" autocomplete="off">
+      <div class="nhint" id="nhint">0 / 4 parts entered</div>
+      <div class="nerr" id="nerr">⚠ Please enter your full four-part name.</div>
+    </div>
+    <button class="btnp" id="startBtn" disabled onclick="startQuiz()">Begin Quiz →</button>
+    <div class="pills">
+      <div class="pill"><div class="n">50</div><div class="l">Questions</div></div>
+      <div class="pill"><div class="n">50</div><div class="l">Marks</div></div>
+      <div class="pill"><div class="n">30</div><div class="l">Min Limit</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="qz-scr" class="scr hidden" style="align-items:flex-start;justify-content:center;">
+  <div class="qtop">
+    <div class="qctr">Question <span id="qn">1</span> of <span id="qt">50</span></div>
+    <div class="twrap"><span style="color:var(--gold)">⏱</span><span class="tdisp" id="tdisp">30:00</span></div>
+  </div>
+  <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
+  <div class="qcard">
+    <div class="ttag" id="ttag">Topic</div>
+    <div class="qtxt" id="qtxt">Loading…</div>
+    <div class="opts" id="opts"></div>
+    <div class="fbar">
+      <div class="fmsg" id="fmsg"></div>
+      <button class="btnn" id="btnn" onclick="nextQ()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="rs-scr" class="scr hidden" style="align-items:flex-start;justify-content:center;">
+  <div class="rcard">
+    <div class="rhdr">
+      <div class="rtitle">📋 Quiz Results</div>
+      <div class="rsname" id="rsname"></div>
+      <div class="gbadge" id="gbadge"></div>
+      <div class="ring-wrap">
+        <svg width="155" height="155" viewBox="0 0 155 155">
+          <circle class="rbg" cx="77.5" cy="77.5" r="67.5"/>
+          <circle class="rfill" id="rfill" cx="77.5" cy="77.5" r="67.5" stroke-dasharray="424.12" stroke-dashoffset="424.12"/>
+        </svg>
+        <div class="rctr"><span class="rpct" id="rpct">0</span><span class="rpct-sym">%</span></div>
+      </div>
+      <div class="srow">
+        <div class="sb o"><div class="sn" id="stot">50</div><div class="sl">Total</div></div>
+        <div class="sb g"><div class="sn" id="scor">0</div><div class="sl">Correct ✓</div></div>
+        <div class="sb r"><div class="sn" id="swrg">0</div><div class="sl">Wrong ✗</div></div>
+      </div>
+    </div>
+    <div class="wsec" id="wsec"></div>
+    <div class="rftr"><button class="btnr" onclick="retryQuiz()">↺ &nbsp;Retry Quiz</button></div>
+  </div>
+</div>
+
+<script>
+// ── STARS ──
+(function(){
+  var cv=document.getElementById('cvs'),ctx=cv.getContext('2d'),st=[];
+  function resize(){cv.width=innerWidth;cv.height=innerHeight;}
+  function init(){st=[];var n=Math.floor(cv.width*cv.height/6500);for(var i=0;i<n;i++)st.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.7+0.2,sp:Math.random()*0.007+0.003,ph:Math.random()*Math.PI*2});}
+  function draw(t){ctx.clearRect(0,0,cv.width,cv.height);for(var i=0;i<st.length;i++){var s=st[i],a=0.15+0.85*Math.abs(Math.sin(s.ph+t*s.sp));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+a.toFixed(3)+')';ctx.fill();}requestAnimationFrame(draw);}
+  window.addEventListener('resize',function(){resize();init();});
+  resize();init();draw(0);
+})();
+
+// ── 50 QUESTIONS (strictly from the PDF) ──
+var QB=[
+{t:"The groups of words that have lexical meaning, accept lexical endings, and serve different grammatical functions are called:",
+ o:["Structure classes","Form classes","Function words","Closed classes"],a:1,tp:"Form Classes",
+ wr:"Structure classes do not carry full lexical meaning and do not inflect. Function words and closed classes are related concepts but are not the correct technical term for this definition.",
+ cr:"FORM CLASSES are defined in the material as groups of words with lexical meaning, accepting lexical endings, and serving different grammatical functions in sentences.",
+ war:"أصناف البنية لا تحمل معنى معجمياً كاملاً ولا تتصرف. الكلمات الوظيفية والأصناف المغلقة مفاهيم مرتبطة لكنها ليست المصطلح الصحيح لهذا التعريف.",
+ car:"أصناف الصيغة هي المجموعات التي تحمل معنى معجمياً وتقبل اللواحق وتؤدي وظائف نحوية مختلفة — هذا هو التعريف الوارد في المادة."},
+
+{t:"English language has a set of _____ major form classes.",
+ o:["Three","Four","Five","Six"],a:2,tp:"Form Classes",
+ wr:"The material states clearly that English has neither three, four, nor six major form classes.",
+ cr:"The material states: 'English language has a set of FIVE major form classes' — nouns, verbs, adjectives, adverbs, and prepositions.",
+ war:"تنص المادة بوضوح على أن اللغة الإنجليزية ليست لديها ثلاثة أو أربعة أو ستة أصناف.",
+ car:"تنص المادة على أن اللغة الإنجليزية لديها خمسة أصناف رئيسية للصيغة."},
+
+{t:"Nouns are words that name people, places, things, or:",
+ o:["Actions","Abstract ideas","Qualities only","States of being"],a:1,tp:"Nouns",
+ wr:"Actions are expressed by verbs. Qualities alone and states of being describe other parts of speech. The material gives a specific fourth category for nouns.",
+ cr:"The material defines nouns as words naming people, places, things, or ABSTRACT IDEAS — such as freedom, justice, or love.",
+ war:"الأفعال هي التي تعبّر عن الأحداث. الصفات فقط والحالات تصف أجزاء أخرى من الكلام. تُعطي المادة فئة رابعة محددة للأسماء.",
+ car:"تُعرّف المادة الأسماء بأنها كلمات تسمّي الأشخاص والأماكن والأشياء والأفكار المجردة."},
+
+{t:"A word that can have Plural (−s or −es) and accepts Possessive 's is called a:",
+ o:["Verb","Adjective","Noun","Adverb"],a:2,tp:"Nouns",
+ wr:"Verbs take -ed/-ing; adjectives take -er/-est; adverbs take -ly. Only nouns have both plural and possessive features.",
+ cr:"The material states: 'A word that can have Plural (-s or -es) and accepts Possessive 's is called a NOUN.'",
+ war:"الأفعال تأخذ -ed/-ing؛ والصفات -er/-est؛ والظروف -ly. الأسماء فقط هي التي تملك خاصيتي الجمع والملكية.",
+ car:"تنص المادة: 'الكلمة التي تقبل الجمع (-s أو -es) وعلامة الملكية 's تسمى اسماً.'"},
+
+{t:"In 'The student is reading a book,' the underlined word (student) functions as a:",
+ o:["Object","Complement","Subject","Modifier"],a:2,tp:"Nouns",
+ wr:"The object receives action; the complement renames the subject after a linking verb; the modifier describes another word. Here 'student' performs the action.",
+ cr:"The material states this word functions as a SUBJECT — the doer of the action 'is reading'.",
+ war:"المفعول به يستقبل الفعل؛ والمكمّل يأتي بعد الفعل الرابط؛ والمُعدِّل يصف كلمة أخرى. هنا 'student' هو من يؤدي الفعل.",
+ car:"تنص المادة على أن هذه الكلمة تعمل فاعلاً — أي القائم بفعل القراءة."},
+
+{t:"In 'I like sport,' the underlined word (sport) functions as a(n):",
+ o:["Subject","Object","Complement","Gerund"],a:1,tp:"Nouns",
+ wr:"'I' is the subject. Sport is not a gerund (no -ing form), and 'like' is not a linking verb so there is no complement.",
+ cr:"The material states 'sport' functions as an OBJECT — it receives the action of 'like'. It answers: 'I like WHAT? → sport'.",
+ war:"'I' هو الفاعل. 'sport' لا تعمل gerund (لا صيغة -ing)، و'like' ليس فعلاً رابطاً فلا مكمّل.",
+ car:"تنص المادة على أن 'sport' تعمل مفعولاً به — تستقبل فعل 'like'. تجيب على: أحب ماذا؟ → الرياضة."},
+
+{t:"In 'He is a doctor,' the underlined word (doctor) functions as a:",
+ o:["Subject","Object","Complement","Modifier"],a:2,tp:"Nouns",
+ wr:"'He' is the subject. 'Doctor' does not receive an action (object), and does not describe another word (modifier). It follows the linking verb 'is'.",
+ cr:"The material states 'doctor' functions as a COMPLEMENT — it follows the linking verb 'is' and renames/identifies the subject 'He'.",
+ war:"'He' هو الفاعل. 'doctor' لا تستقبل فعلاً (مفعول)، ولا تصف كلمة أخرى (مُعدِّل). تأتي بعد الفعل الرابط 'is'.",
+ car:"تنص المادة على أن 'doctor' تعمل مكمّلاً — تأتي بعد الفعل الرابط 'is' وتُعيد تعريف الفاعل 'He'."},
+
+{t:"The noun 'acceptance' is derived from a:",
+ o:["Noun","Verb","Adjective","Adverb"],a:1,tp:"Nouns – Derivation",
+ wr:"'Acceptance' does not come from another noun, adjective, or adverb. The base word is a verb.",
+ cr:"The material states: 'The noun acceptance is derived from a VERB.' (accept + -ance = acceptance).",
+ war:"'acceptance' لا تأتي من اسم آخر أو صفة أو ظرف. كلمة الأساس فعل.",
+ car:"تنص المادة: 'الاسم acceptance مشتق من فعل.' (accept + -ance = acceptance)."},
+
+{t:"The noun 'decision' is derived from a:",
+ o:["Noun","Adjective","Verb","Pronoun"],a:2,tp:"Nouns – Derivation",
+ wr:"'Decision' does not come from a noun, adjective, or pronoun. Trace back: decide → decision.",
+ cr:"The material states: 'The noun decision is derived from a VERB.' (decide + -ion = decision).",
+ war:"'decision' لا تأتي من اسم أو صفة أو ضمير. ارجع إلى الجذر: decide → decision.",
+ car:"تنص المادة: 'الاسم decision مشتق من فعل.' (decide + -ion = decision)."},
+
+{t:"The noun 'importance' is derived from a:",
+ o:["Noun","Verb","Adjective","Adverb"],a:1,tp:"Nouns – Derivation",
+ wr:"Although related to 'important' (adjective), the material specifically states the derivation is from a verb, not an adjective.",
+ cr:"The material states: 'The noun importance is derived from a VERB.' (import + -ance = importance).",
+ war:"رغم ارتباطها بـ 'important' (صفة)، تنص المادة تحديداً على أن الاشتقاق من فعل لا من صفة.",
+ car:"تنص المادة: 'الاسم importance مشتق من فعل.' (import + -ance = importance)."},
+
+{t:"The noun 'booklet' is derived from a:",
+ o:["Verb","Noun","Adjective","Adverb"],a:1,tp:"Nouns – Derivation",
+ wr:"'Booklet' is not from a verb, adjective, or adverb. The base word 'book' is itself a noun.",
+ cr:"The material states: 'The noun booklet is derived from a NOUN.' (book + -let = booklet).",
+ war:"'booklet' ليست من فعل أو صفة أو ظرف. كلمة الأساس 'book' اسم.",
+ car:"تنص المادة: 'الاسم booklet مشتق من اسم.' (book + -let = booklet)."},
+
+{t:"The noun 'friendship' is derived from a:",
+ o:["Verb","Adjective","Noun","Pronoun"],a:2,tp:"Nouns – Derivation",
+ wr:"'Friendship' is not from a verb, adjective, or pronoun. The base 'friend' is a noun.",
+ cr:"The material states: 'The noun friendship is derived from a NOUN.' (friend + -ship = friendship).",
+ war:"'friendship' ليست من فعل أو صفة أو ضمير. الأساس 'friend' اسم.",
+ car:"تنص المادة: 'الاسم friendship مشتق من اسم.' (friend + -ship = friendship)."},
+
+{t:"The noun 'purity' is derived from an:",
+ o:["Noun","Verb","Adjective","Adverb"],a:2,tp:"Nouns – Derivation",
+ wr:"'Purity' is not from a noun, verb, or adverb. The base 'pure' is an adjective.",
+ cr:"The material states: 'The noun purity is derived from an ADJECTIVE.' (pure + -ity = purity).",
+ war:"'purity' ليست من اسم أو فعل أو ظرف. الأساس 'pure' صفة.",
+ car:"تنص المادة: 'الاسم purity مشتق من صفة.' (pure + -ity = purity)."},
+
+{t:"The noun 'wisdom' is derived from an:",
+ o:["Noun","Verb","Adverb","Adjective"],a:3,tp:"Nouns – Derivation",
+ wr:"'Wisdom' is not from a noun, verb, or adverb. The base 'wise' is an adjective.",
+ cr:"The material states: 'The noun wisdom is derived from an ADJECTIVE.' (wise + -dom = wisdom).",
+ war:"'wisdom' ليست من اسم أو فعل أو ظرف. الأساس 'wise' صفة.",
+ car:"تنص المادة: 'الاسم wisdom مشتق من صفة.' (wise + -dom = wisdom)."},
+
+{t:"Verbs are words that express actions or:",
+ o:["Qualities","Positions","States of being","Descriptions"],a:2,tp:"Verbs",
+ wr:"Qualities are for adjectives; positions relate to prepositions; descriptions belong to adjectives/adverbs. The material gives a specific second function for verbs.",
+ cr:"The material states: 'Verbs are words that express actions or STATES OF BEING.'",
+ war:"الصفات للصفات؛ والمواضع لحروف الجر؛ والأوصاف للصفات والظروف. تُعطي المادة وظيفة ثانية محددة للأفعال.",
+ car:"تنص المادة: 'الأفعال هي كلمات تعبّر عن الأحداث أو حالات الوجود.'"},
+
+{t:"Verbs have a maximum of _____ different inflectional forms.",
+ o:["Three","Four","Six","Five"],a:3,tp:"Verbs",
+ wr:"The material is specific: English verbs do not have three, four, or six inflectional forms as a maximum.",
+ cr:"The material states: 'Verbs have a maximum of FIVE different inflectional forms' — stem, past -ed, past participle -en/-ed, -ing, and -s (3rd person).",
+ war:"المادة محددة: الأفعال الإنجليزية ليس لديها ثلاث أو أربع أو ست صور تصريفية كحد أقصى.",
+ car:"تنص المادة: 'للأفعال حد أقصى خمس صور تصريفية مختلفة' — الجذع والماضي والمفعول المصدري و-ing والغائب."},
+
+{t:"In 'Mary speaks English well,' the underlined verb (speaks) functions as a:",
+ o:["Auxiliary verb","Main verb","Modal verb","Linking verb"],a:1,tp:"Verbs",
+ wr:"Auxiliaries support other verbs; modals express ability/possibility; linking verbs connect to a complement. 'Speaks' carries the full meaning itself.",
+ cr:"The material states: 'The underlined verb (speaks) functions as a MAIN VERB.'",
+ war:"الأفعال المساعدة تدعم أفعالاً أخرى؛ والشرطية تعبّر عن القدرة؛ والرابطة تربط بالمكمّل. 'speaks' تحمل المعنى الكامل بنفسها.",
+ car:"تنص المادة: 'الفعل المُسطَّر (speaks) يعمل فعلاً رئيسياً.'"},
+
+{t:"The girl has _____ a letter. (correct past participle of 'write')",
+ o:["Write","Writes","Wrote","Written"],a:3,tp:"Verbs",
+ wr:"'Write' is the stem; 'writes' is the 3rd person present; 'wrote' is the simple past. The form after 'has' must be the past participle.",
+ cr:"The material gives: 'The girl has WRITTEN a letter.' Written is the past participle of the irregular verb 'write'.",
+ war:"'write' الجذع؛ 'writes' الغائب المضارع؛ 'wrote' الماضي البسيط. الصورة بعد 'has' يجب أن تكون المفعول المصدري.",
+ car:"تُعطي المادة: 'The girl has WRITTEN a letter.' — written هو المفعول المصدري للفعل الشاذ 'write'."},
+
+{t:"In 'We have been shopping,' the underlined verb (have) functions as a(n):",
+ o:["Main verb","Adjective","Auxiliary verb","Determiner"],a:2,tp:"Verbs",
+ wr:"'Shopping' is the main verb here; 'have' is not an adjective or determiner. It supports the main verb.",
+ cr:"The material states: 'The underlined verb (have) functions as an AUXILIARY VERB.'",
+ war:"'shopping' هو الفعل الرئيسي هنا؛ 'have' ليست صفة أو أداة تحديد. إنها تدعم الفعل الرئيسي.",
+ car:"تنص المادة: 'الفعل المُسطَّر (have) يعمل فعلاً مساعداً.'"},
+
+{t:"The underlined verb 'go' has _____ inflected forms.",
+ o:["Two","Three","Four","Five"],a:3,tp:"Verbs",
+ wr:"'Go' has: go (stem), goes (-s), went (past), gone (past participle), going (-ing). That is more than two, three, or four.",
+ cr:"The material states: 'The underlined verb go has FIVE inflected forms' — go, goes, went, gone, going.",
+ war:"'go' لها: go (جذع)، goes (-s)، went (ماضٍ)، gone (مفعول مصدري)، going (-ing). هذا أكثر من اثنتين أو ثلاث أو أربع.",
+ car:"تنص المادة: 'الفعل go له خمس صور متصرفة' — go, goes, went, gone, going."},
+
+{t:"The verb 'beautify' is derived from a:",
+ o:["Noun","Verb","Adjective","Adverb"],a:0,tp:"Verbs – Derivation",
+ wr:"'Beautify' does not come from another verb, an adjective, or an adverb. The base word 'beauty' is a noun.",
+ cr:"The material states: 'The verb beautify is derived from a NOUN.' (beauty + -ify = beautify).",
+ war:"'beautify' لا تأتي من فعل آخر أو صفة أو ظرف. كلمة الأساس 'beauty' اسم.",
+ car:"تنص المادة: 'الفعل beautify مشتق من اسم.' (beauty + -ify = beautify)."},
+
+{t:"The verb 'lengthen' is derived from a:",
+ o:["Adjective","Noun","Verb","Pronoun"],a:1,tp:"Verbs – Derivation",
+ wr:"'Lengthen' does not come from an adjective, another verb, or a pronoun. The base 'length' is a noun.",
+ cr:"The material states: 'The verb lengthen is derived from a NOUN.' (length + -en = lengthen).",
+ war:"'lengthen' لا تأتي من صفة أو فعل آخر أو ضمير. الأساس 'length' اسم.",
+ car:"تنص المادة: 'الفعل lengthen مشتق من اسم.' (length + -en = lengthen)."},
+
+{t:"The verb 'save' is derived from an:",
+ o:["Noun","Verb","Adjective","Adverb"],a:2,tp:"Verbs – Derivation",
+ wr:"'Save' is not from a noun, another verb, or adverb. The connection is to the adjective 'safe' with a spelling change (f→v).",
+ cr:"The material states: 'The verb save is derived from an ADJECTIVE.' (safe → save, with f→v change).",
+ war:"'save' ليست من اسم أو فعل آخر أو ظرف. الارتباط بالصفة 'safe' مع تغيير إملائي (f←v).",
+ car:"تنص المادة: 'الفعل save مشتق من صفة.' (safe → save مع تغيير f←v)."},
+
+{t:"In 'This paragraph will weaken your paper,' the underlined word is derived from an:",
+ o:["Noun","Verb","Adjective","Adverb"],a:2,tp:"Verbs – Derivation",
+ wr:"'Weaken' is not from a noun, another verb, or adverb. It is built by adding -en to an adjective.",
+ cr:"The material states: the underlined word is derived from an ADJECTIVE. (weak + -en = weaken).",
+ war:"'weaken' ليست من اسم أو فعل آخر أو ظرف. تُبنى بإضافة -en إلى صفة.",
+ car:"تنص المادة: الكلمة المُسطَّرة مشتقة من صفة. (weak + -en = weaken)."},
+
+{t:"The derived verb of 'safe' is:",
+ o:["Savings","Save","Safety","Safely"],a:1,tp:"Verbs – Derivation",
+ wr:"'Savings' and 'safety' are nouns; 'safely' is an adverb. Only one option is the verb derived from the adjective 'safe'.",
+ cr:"The material states: 'The derived verb of safe is SAVE.' (safe → save).",
+ war:"'savings' و'safety' أسماء؛ 'safely' ظرف. فقط خيار واحد هو الفعل المشتق من الصفة 'safe'.",
+ car:"تنص المادة: 'الفعل المشتق من safe هو save.' (safe → save)."},
+
+{t:"In 'The mines had been swept away,' the underlined verb occurs in the:",
+ o:["Simple stem","Past tense","Past participle","Present participle"],a:2,tp:"Verbs",
+ wr:"The stem would be 'sweep'; the past tense is 'swept' alone; the present participle is 'sweeping'. Here 'swept' follows 'had been'.",
+ cr:"The material states: 'The underlined verb occurs in the PAST PARTICIPLE.' — 'swept' follows 'had been', a classic past participle position.",
+ war:"الجذع سيكون 'sweep'؛ والماضي 'swept' وحده؛ ومضارع المستمر 'sweeping'. هنا 'swept' تتبع 'had been'.",
+ car:"تنص المادة: 'الفعل المُسطَّر يأتي في صيغة المفعول المصدري.' — 'swept' تتبع 'had been' وهو موضع مفعول مصدري كلاسيكي."},
+
+{t:"A word inflected with −er and −est, capable of forming adverbs with −ly or nouns with −ness, is called a(n):",
+ o:["Adverb","Adjective","Noun","Verb"],a:1,tp:"Adjectives",
+ wr:"Adverbs usually end in -ly; nouns take -s/-'s; verbs take -ed/-ing. Only adjectives have all these features: -er/-est/-ly/-ness.",
+ cr:"The material states: 'A word inflected with -er and -est, and capable of forming adverbs with -ly or nouns with -ness is called an ADJECTIVE.'",
+ war:"الظروف تنتهي عادةً بـ -ly؛ والأسماء تأخذ -s/-'s؛ والأفعال -ed/-ing. الصفات فقط لديها كل هذه الخصائص.",
+ car:"تنص المادة: 'الكلمة المُعرَّبة بـ -er و-est والقادرة على تكوين ظروف بـ -ly أو أسماء بـ -ness تسمى صفة.'"},
+
+{t:"The adjective 'aged' is derived from a:",
+ o:["Verb","Adjective","Noun","Adverb"],a:2,tp:"Adjectives – Derivation",
+ wr:"'Aged' is not from a verb, another adjective, or adverb. The base word 'age' is a noun.",
+ cr:"The material states: 'The adjective aged is derived from a NOUN.' (age + -d/-ed = aged).",
+ war:"'aged' ليست من فعل أو صفة أخرى أو ظرف. كلمة الأساس 'age' اسم.",
+ car:"تنص المادة: 'الصفة aged مشتقة من اسم.' (age + -d/-ed = aged)."},
+
+{t:"The adjective 'cultural' is derived from a:",
+ o:["Verb","Noun","Adverb","Adjective"],a:1,tp:"Adjectives – Derivation",
+ wr:"'Cultural' is not from a verb, adverb, or another adjective. The base 'culture' is a noun.",
+ cr:"The material states: 'The adjective cultural is derived from a NOUN.' (culture + -al = cultural).",
+ war:"'cultural' ليست من فعل أو ظرف أو صفة أخرى. الأساس 'culture' اسم.",
+ car:"تنص المادة: 'الصفة cultural مشتقة من اسم.' (culture + -al = cultural)."},
+
+{t:"The adjective 'fortunate' is derived from a:",
+ o:["Verb","Adjective","Noun","Adverb"],a:2,tp:"Adjectives – Derivation",
+ wr:"'Fortunate' is not from a verb, another adjective, or adverb. The base 'fortune' is a noun.",
+ cr:"The material states: 'The adjective fortunate is derived from a NOUN.' (fortune + -ate = fortunate).",
+ war:"'fortunate' ليست من فعل أو صفة أخرى أو ظرف. الأساس 'fortune' اسم.",
+ car:"تنص المادة: 'الصفة fortunate مشتقة من اسم.' (fortune + -ate = fortunate)."},
+
+{t:"The adjective 'wooden' is derived from a:",
+ o:["Adjective","Noun","Verb","Adverb"],a:1,tp:"Adjectives – Derivation",
+ wr:"'Wooden' is not from another adjective, a verb, or an adverb. The base 'wood' is a noun.",
+ cr:"The material states: 'The adjective wooden is derived from a NOUN.' (wood + -en = wooden).",
+ war:"'wooden' ليست من صفة أخرى أو فعل أو ظرف. الأساس 'wood' اسم.",
+ car:"تنص المادة: 'الصفة wooden مشتقة من اسم.' (wood + -en = wooden)."},
+
+{t:"The adjective 'collective' is derived from a:",
+ o:["Verb","Adjective","Noun","Adverb"],a:0,tp:"Adjectives – Derivation",
+ wr:"'Collective' is not from an adjective, noun, or adverb. The base 'collect' is a verb.",
+ cr:"The material states: 'The adjective collective is derived from a VERB.' (collect + -ive = collective).",
+ war:"'collective' ليست من صفة أو اسم أو ظرف. الأساس 'collect' فعل.",
+ car:"تنص المادة: 'الصفة collective مشتقة من فعل.' (collect + -ive = collective)."},
+
+{t:"The adjective 'continual' is derived from a:",
+ o:["Noun","Verb","Adjective","Adverb"],a:1,tp:"Adjectives – Derivation",
+ wr:"'Continual' is not from a noun, another adjective, or adverb. The base 'continue' is a verb.",
+ cr:"The material states: 'The adjective continual is derived from a VERB.' (continue + -al = continual).",
+ war:"'continual' ليست من اسم أو صفة أخرى أو ظرف. الأساس 'continue' فعل.",
+ car:"تنص المادة: 'الصفة continual مشتقة من فعل.' (continue + -al = continual)."},
+
+{t:"The adjective 'deadly' is derived from an:",
+ o:["Noun","Verb","Adjective","Adverb"],a:2,tp:"Adjectives – Derivation",
+ wr:"'Deadly' is not from a noun, verb, or adverb. The base 'dead' is itself an adjective.",
+ cr:"The material states: 'The adjective deadly is derived from an ADJECTIVE.' (dead + -ly = deadly).",
+ war:"'deadly' ليست من اسم أو فعل أو ظرف. الأساس 'dead' صفة.",
+ car:"تنص المادة: 'الصفة deadly مشتقة من صفة.' (dead + -ly = deadly)."},
+
+{t:"The most commonly used suffix for forming English adverbs is:",
+ o:["−ness","−ward","−ly","−ful"],a:2,tp:"Adverbs",
+ wr:"-ness forms nouns (kindness); -ward forms directional adverbs but is much less common; -ful forms adjectives (helpful). The material names one dominant suffix.",
+ cr:"The material states: 'The most commonly used suffix for forming English adverbs is −LY.' (quickly, softly, carefully).",
+ war:"-ness تكوّن الأسماء؛ و-ward أقل شيوعاً؛ و-ful تكوّن الصفات. تُسمّي المادة لاحقة واحدة مهيمنة.",
+ car:"تنص المادة: 'أكثر اللواحق استخداماً لتكوين الظروف الإنجليزية هي −ly.' (quickly, softly, carefully)."},
+
+{t:"The adverb 'fortunately' is derived from an:",
+ o:["Noun","Verb","Adverb","Adjective"],a:3,tp:"Adverbs",
+ wr:"'Fortunately' is not from a noun, verb, or another adverb. The base 'fortunate' is an adjective.",
+ cr:"The material states: 'The adverb fortunately is derived from an ADJECTIVE.' (fortunate + -ly = fortunately).",
+ war:"'fortunately' ليست من اسم أو فعل أو ظرف آخر. الأساس 'fortunate' صفة.",
+ car:"تنص المادة: 'الظرف fortunately مشتق من صفة.' (fortunate + -ly = fortunately)."},
+
+{t:"In 'He looked cityward for a sign of the train,' the underlined word 'cityward' has a(n):",
+ o:["Adjectival position","Nominal position","Adverbial position","Verbal position"],a:2,tp:"Adverbs",
+ wr:"'Cityward' does not modify a noun (adjectival), is not itself a noun (nominal), and is not a verb. It tells us the direction of looking.",
+ cr:"The material states: 'The underlined word cityward has an ADVERBIAL POSITION.' It modifies the verb 'looked'.",
+ war:"'cityward' لا تعدّل اسماً (adjectival)، وليست اسماً (nominal)، وليست فعلاً. تُخبرنا اتجاه النظر.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة cityward لها موضع ظرفي.' تعدّل الفعل 'looked'."},
+
+{t:"In 'Mondays she sleeps late,' the underlined word 'Mondays' is:",
+ o:["Adjectival","Nominal","Adverbial","Verbal"],a:2,tp:"Adverbs",
+ wr:"'Mondays' does not modify a noun (adjectival), is not in a noun position (nominal), and is not a verb. It tells us WHEN she sleeps late.",
+ cr:"The material states: 'The underlined word Mondays is ADVERBIAL.' — it occupies an adverb of time position.",
+ war:"'Mondays' لا تعدّل اسماً (adjectival)، وليست في موضع اسمي (nominal)، وليست فعلاً. تُخبرنا متى تنام.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة Mondays ظرفية.' — تشغل موضع ظرف الزمان."},
+
+{t:"Members of a structure class are recognized mainly by:",
+ o:["Their inflectional forms","Position","Their suffixes","Their lexical meaning"],a:1,tp:"Structure Classes",
+ wr:"Structure class words rarely inflect, have no identifying suffixes, and carry little lexical meaning. Their recognition depends on something else.",
+ cr:"The material states: 'Members of a given structure class are recognized mainly by POSITION.'",
+ war:"كلمات أصناف البنية نادراً ما تتصرف، وليست لها لواحق مُعرِّفة، وتحمل معنى معجمي ضئيل. تعرّفها يعتمد على شيء آخر.",
+ car:"تنص المادة: 'أعضاء صنف البنية يُعرَّفون أساساً بالموضع.'"},
+
+{t:"A structure class has stable membership and is a _____ class.",
+ o:["Open","Major","Closed","Lexical"],a:2,tp:"Structure Classes",
+ wr:"Open classes accept new members regularly (nouns, verbs). 'Major' and 'lexical' do not describe the membership stability of structure classes.",
+ cr:"The material states: 'A structure class has a stable membership and is a CLOSED class, that is, it rarely admits new membership.'",
+ war:"الأصناف المفتوحة تقبل أعضاء جدداً (أسماء، أفعال). 'major' و'lexical' لا يصفان ثبات عضوية أصناف البنية.",
+ car:"تنص المادة: 'صنف البنية له عضوية ثابتة وهو صنف مغلق، أي أنه نادراً ما يقبل أعضاء جدداً.'"},
+
+{t:"A qualifier occurs in the position just _____ an adjectival or an adverbial.",
+ o:["After","Before","Within","At the end of"],a:1,tp:"Qualifiers",
+ wr:"Qualifiers cannot come after, within, or at the end of the word they modify. Their fixed position is what defines their function.",
+ cr:"The material states: 'A qualifier occurs in the position just BEFORE an adjectival or an adverbial.' (e.g., 'The party was rather interesting').",
+ war:"المُكيّفات لا تأتي بعد أو داخل أو في نهاية الكلمة التي تعدّلها. موضعها الثابت هو ما يُعرِّف وظيفتها.",
+ car:"تنص المادة: 'يأتي المُكيّف في الموضع مباشرةً قبل الصفة أو الظرف.' (مثل: 'The party was rather interesting')."},
+
+{t:"In 'The table was only inches wide,' the function of 'inches' is a:",
+ o:["Determiner","Preposition","Pronoun","Qualifier by position"],a:3,tp:"Qualifiers",
+ wr:"'Inches' is not a determiner (doesn't signal a noun alone), not a preposition (doesn't link nouns), and not a pronoun (doesn't replace a noun).",
+ cr:"The material states: 'The function of the underlined word inches is a QUALIFIER BY POSITION.' — it appears before the adjective 'wide'.",
+ war:"'inches' ليست أداة تحديد (لا تُشير إلى اسم وحدها)، وليست حرف جر (لا تربط الأسماء)، وليست ضميراً (لا تحل محل اسم).",
+ car:"تنص المادة: 'وظيفة الكلمة المُسطَّرة inches هي مُكيّف بحسب الموضع.' — تأتي قبل الصفة 'wide'."},
+
+{t:"In 'Are you completely happy with your courses?' the form class of the underlined qualifier is a(n):",
+ o:["Qualifier","Adjective","Adverb","Determiner"],a:2,tp:"Qualifiers",
+ wr:"'Qualifier' is a positional/functional label, not a form class. 'Completely' is not an adjective or determiner based on its form.",
+ cr:"The material states: 'The form class of the underlined qualifier is an ADVERB.' (complete + -ly = completely — an adverb in form).",
+ war:"'Qualifier' تصنيف وظيفي/موضعي وليس صنف صيغة. 'completely' ليست صفة أو أداة تحديد بناءً على شكلها.",
+ car:"تنص المادة: 'صنف الصيغة للمُكيّف المُسطَّر هو ظرف.' (complete + -ly = completely — ظرف في الصيغة)."},
+
+{t:"The word 'except' is considered a _____ preposition.",
+ o:["In","On","At","Two-syllable"],a:3,tp:"Prepositions",
+ wr:"'In', 'on', and 'at' are all one-syllable prepositions. The material classifies 'except' by the number of its syllables.",
+ cr:"The material states: 'The word except is considered a TWO-SYLLABLE preposition.' (ex-cept).",
+ war:"'in' و'on' و'at' كلها حروف جر أحادية المقطع. تُصنّف المادة 'except' بعدد مقاطعها.",
+ car:"تنص المادة: 'كلمة except تُعتبر حرف جر ثنائي المقطع.' (ex-cept)."},
+
+{t:"In 'Considering your loss, the bill will not be sent,' 'considering' is a(n):",
+ o:["−ed preposition","−ing preposition","Modal auxiliary","Qualifier"],a:1,tp:"Prepositions",
+ wr:"'Considering' ends in -ing, not -ed. It is not a modal auxiliary (which supports a main verb) or a qualifier (which precedes an adjective/adverb).",
+ cr:"The material states: 'The underlined word considering is an −ING PREPOSITION.'",
+ war:"'considering' تنتهي بـ -ing لا -ed. وليست مساعداً شرطياً (يدعم فعلاً رئيسياً) ولا مُكيّفاً (يسبق صفة/ظرف).",
+ car:"تنص المادة: 'الكلمة المُسطَّرة considering هي حرف جر بصيغة −ing.'"},
+
+{t:"A determiner precedes the noun and serves as a signal that the noun is:",
+ o:["Already mentioned","Soon to follow","Being modified","The subject"],a:1,tp:"Determiners",
+ wr:"The material does not say the determiner signals a noun already mentioned, being modified, or the subject. It signals what is coming.",
+ cr:"The material states: 'A determiner is a word that patterns with a noun. It precedes the noun and serves as a signal that the noun is SOON TO FOLLOW.'",
+ war:"لا تنص المادة على أن أداة التحديد تُشير إلى اسم مذكور سابقاً أو يُعدَّل أو هو الفاعل. إنها تُشير إلى ما هو قادم.",
+ car:"تنص المادة: 'أداة التحديد تسبق الاسم وتعمل إشارة إلى أن الاسم سيأتي قريباً.'"},
+
+{t:"In 'I thought I could help you,' the underlined word is a:",
+ o:["Main verb","Determiner","Modal auxiliary verb","Qualifier"],a:2,tp:"Auxiliaries",
+ wr:"'Could' is not the main verb (help is), not a determiner (doesn't signal a noun), and not a qualifier (doesn't intensify adjective/adverb).",
+ cr:"The material states: 'The underlined word is a MODAL AUXILIARY VERB.' 'Could' supports the main verb 'help'.",
+ war:"'could' ليست الفعل الرئيسي ('help' هو الرئيسي)، وليست أداة تحديد، وليست مُكيّفاً.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة هي فعل مساعد شرطي.' تدعم 'could' الفعل الرئيسي 'help'."},
+
+{t:"When immediately preceding the main verb, 'have' is followed by a:",
+ o:["Present participle","Past participle","Infinitive","Stem form"],a:1,tp:"Auxiliaries",
+ wr:"'Have' + present participle is not the perfect aspect. Have + infinitive or stem form is grammatically incorrect for the perfect.",
+ cr:"The material states: 'When immediately preceding the main verb, have is followed by a PAST PARTICIPLE.' (have written, has gone, had finished).",
+ war:"'have' + اسم فاعل حاضر ليست الجانب التام. have + مصدر أو جذع غير صحيح نحوياً للتام.",
+ car:"تنص المادة: 'حين يسبق الفعل الرئيسي مباشرةً، يتبع have مفعول مصدري.' (have written, has gone, had finished)."},
+
+{t:"The obligatory sequence of auxiliary verbs is:",
+ o:["have + modal + be","be + have + modal","modal + have + be","be + modal + have"],a:2,tp:"Auxiliaries",
+ wr:"The other sequences are all ungrammatical. There is only one correct obligatory order for English auxiliaries.",
+ cr:"The material states: 'The obligatory sequence of verbs is MODAL + HAVE + BE.' (e.g., could have been).",
+ war:"بقية التسلسلات كلها غير صحيحة نحوياً. يوجد ترتيب إلزامي واحد صحيح فقط للمساعدات الإنجليزية.",
+ car:"تنص المادة: 'الترتيب الإلزامي للأفعال هو modal + have + be.' (مثل: could have been)."},
+
+{t:"'The car could have been wrecked by the storm.' This sentence contains _____ auxiliary verbs.",
+ o:["One","Two","Three","Four"],a:2,tp:"Auxiliaries",
+ wr:"Counting one or two misses some auxiliaries. Identifying: 'could' (modal) + 'have' (perfect) + 'been' (passive) = three auxiliaries.",
+ cr:"The material states: 'This sentence contains THREE auxiliary verbs.' — could + have + been.",
+ war:"عدّ واحد أو اثنين يُفوّت بعض المساعدات. تحديد: 'could' (شرطي) + 'have' (تام) + 'been' (مجهول) = ثلاثة مساعدات.",
+ car:"تنص المادة: 'تحتوي هذه الجملة على ثلاثة أفعال مساعدة.' — could + have + been."},
+
+{t:"In 'The lawn mower is ours,' the underlined word is a:",
+ o:["Prenominal possessive","Interrogative pronoun","Substitutional possessive","Relative pronoun"],a:2,tp:"Pronouns",
+ wr:"A prenominal possessive comes before a noun (my car). An interrogative pronoun asks questions. A relative pronoun introduces a clause.",
+ cr:"The material states: 'The underlined word is SUBSTITUTIONAL POSSESSIVE.' — 'ours' stands alone without following noun.",
+ war:"الملكية قبل الاسم تأتي قبل اسم (my car). الاستفهامية تطرح أسئلة. الموصولة تُقدّم جملة.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة ملكية بديلية.' — 'ours' تقف وحدها بلا اسم بعدها."},
+
+{t:"In 'Who did you take to the theatre?' the underlined word is a(n):",
+ o:["Relative pronoun","Personal pronoun","Interrogative pronoun","Possessive pronoun"],a:2,tp:"Pronouns",
+ wr:"'Who' here starts a direct question, not a relative clause modifying a noun. It is not a personal or possessive pronoun.",
+ cr:"The material states: 'The underlined word is an INTERROGATIVE PRONOUN.' — it asks about a person.",
+ war:"'who' هنا تبدأ سؤالاً مباشراً وليس جملة موصولة تعدّل اسماً. وليست ضميراً شخصياً أو ملكياً.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة ضمير استفهام.' — تسأل عن شخص."},
+
+{t:"In 'The flavor that pleases me most is chocolate,' the function of 'that' is:",
+ o:["Object of verb","Subject of verb","Determiner","Qualifier"],a:1,tp:"Pronouns",
+ wr:"Test: 'that pleases me most' — who pleases me? = 'that' → it is the subject. Not a determiner (no noun follows alone) or qualifier.",
+ cr:"The material states: 'The function of that is SUBJECT OF VERB.' — in the clause 'that pleases me most', 'that' performs the verb 'pleases'.",
+ war:"اختبر: 'that pleases me most' — من يُرضيني؟ = 'that' ← هو الفاعل. وليست أداة تحديد (لا اسم يتبعها وحدها) ولا مُكيّف.",
+ car:"تنص المادة: 'وظيفة that هي فاعل الفعل.' — في الجملة 'that pleases me most' يؤدي 'that' وظيفة الفعل 'pleases'."},
+
+{t:"In 'The girl whom I admired most was Jack's sister,' the function of 'whom' is:",
+ o:["Subject of verb","Object of verb","Determiner","Qualifier"],a:1,tp:"Pronouns",
+ wr:"Test: 'I admired whom/her most' — 'I' is the subject; 'whom' receives the action. It is not a determiner or qualifier.",
+ cr:"The material states: 'The function of the underlined word whom is OBJECT OF VERB.' — in 'I admired whom most', 'whom' is the object.",
+ war:"اختبر: 'I admired whom/her most' — 'I' هو الفاعل؛ 'whom' يستقبل الفعل. وليست أداة تحديد أو مُكيّف.",
+ car:"تنص المادة: 'وظيفة الكلمة المُسطَّرة whom هي مفعول الفعل.' — في 'I admired whom most' هو المفعول به."},
+
+{t:"In 'This is my car,' the underlined word 'my' functions as a:",
+ o:["Substitutional possessive","Interrogative pronoun","Prenominal possessive","Relative pronoun"],a:2,tp:"Pronouns",
+ wr:"A substitutional possessive stands alone (ours, mine). An interrogative pronoun asks questions. A relative pronoun introduces a modifying clause.",
+ cr:"The material states: 'The underlined word my functions as a PRENOMINAL POSSESSIVE.' — it comes directly before the noun 'car'.",
+ war:"الملكية البديلية تقف وحدها (ours, mine). الاستفهامية تطرح أسئلة. الموصولة تُقدّم جملة معدِّلة.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة my تعمل ملكية قبل الاسم.' — تأتي مباشرةً قبل الاسم 'car'."},
+
+{t:"Which of the following is a personal pronoun?",
+ o:["Who","She","Which","Whose"],a:1,tp:"Pronouns",
+ wr:"'Who', 'which', and 'whose' are interrogative or relative pronouns — they ask questions or introduce clauses. They do not refer to persons directly.",
+ cr:"The material states the answer is SHE. 'She' is a personal pronoun (3rd person singular feminine).",
+ war:"'who' و'which' و'whose' ضمائر استفهامية أو موصولة — تطرح أسئلة أو تُقدّم جملاً. لا تشير إلى أشخاص مباشرة.",
+ .ttag{display:inline-block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);border:1px solid rgba(212,175,55,.2);border-radius:20px;padding:4px 13px;margin-bottom:16px}
+.qtxt{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:400;line-height:1.65;color:var(--white);margin-bottom:28px}
+.opts{display:flex;flex-direction:column;gap:11px}
+.opt{background:rgba(255,255,255,.05);border:1.5px solid rgba(212,175,55,.18);border-radius:13px;padding:15px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .25s;text-align:left;width:100%;color:var(--white);font-family:'Crimson Pro',serif;font-size:1.05rem}
+.opt:hover:not(.lk){background:rgba(212,175,55,.1);border-color:rgba(212,175,55,.5);transform:translateX(4px)}
+.ol{min-width:31px;height:31px;border-radius:8px;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--gold);transition:all .25s;flex-shrink:0}
+.opt.cr{background:var(--cbg)!important;border-color:var(--correct)!important}
+.opt.cr .ol{background:var(--correct);color:#fff;border-color:var(--correct)}
+.opt.wr{background:var(--wbg)!important;border-color:var(--wrong)!important}
+.opt.wr .ol{background:var(--wrong);color:#fff;border-color:var(--wrong)}
+.opt.lk{cursor:default}
+.fbar{min-height:40px;margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.fmsg{font-size:.97rem;color:var(--gray)}
+.fmsg.cr{color:var(--correct)}
+.fmsg.wr{color:var(--wrong)}
+.btnn{background:linear-gradient(135deg,var(--gold),#B8960C);color:var(--deep);border:none;border-radius:10px;padding:12px 28px;font-family:'Playfair Display',serif;font-size:.97rem;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(212,175,55,.3);transition:all .25s;opacity:0;pointer-events:none}
+.btnn.vis{opacity:1;pointer-events:all}
+.btnn:hover{transform:translateY(-2px)}
+/* RESULTS */
+#rs-scr{flex-direction:column;padding:28px 20px}
+.rcard{background:var(--card);border:1px solid rgba(212,175,55,.25);border-radius:20px;backdrop-filter:blur(18px);box-shadow:0 24px 72px rgba(0,0,0,.5);padding:48px 44px;max-width:820px;width:100%;position:relative;z-index:1}
+.rhdr{text-align:center;margin-bottom:36px}
+.rtitle{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+.rsname{font-size:1.05rem;color:var(--gray);margin-bottom:26px}
+.ring-wrap{position:relative;width:155px;height:155px;margin:0 auto 26px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.rbg{fill:none;stroke:rgba(212,175,55,.12);stroke-width:10}
+.rfill{fill:none;stroke:var(--gold);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1)}
+.rctr{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.rpct{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold)}
+.rpct-sym{font-size:1.1rem;color:var(--gold-dim)}
+.srow{display:flex;gap:14px;margin-bottom:32px}
+.sb{flex:1;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.08);padding:18px 14px;text-align:center}
+.sb .sn{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700}
+.sb .sl{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px}
+.sb.g .sn{color:var(--correct)}
+.sb.r .sn{color:var(--wrong)}
+.sb.o .sn{color:var(--gold)}
+.gbadge{display:inline-block;font-family:'Playfair Display',serif;font-size:.97rem;padding:8px 22px;border-radius:30px;margin-bottom:18px;font-weight:700;letter-spacing:1px}
+.gA{background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.5);color:var(--correct)}
+.gB{background:rgba(212,175,55,.2);border:1px solid rgba(212,175,55,.5);color:var(--gold)}
+.gC{background:rgba(231,76,60,.2);border:1px solid rgba(231,76,60,.5);color:var(--wrong)}
+.wsec{margin-top:8px}
+.wstitle{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--gold);margin-bottom:16px;padding-bottom:11px;border-bottom:1px solid rgba(212,175,55,.2)}
+.wi{background:rgba(231,76,60,.07);border:1px solid rgba(231,76,60,.2);border-radius:15px;padding:20px 22px;margin-bottom:18px;animation:fi .4s ease}
+.wiq{font-size:1rem;color:var(--white);margin-bottom:12px;line-height:1.6}
+.wiq strong{color:var(--gold-dim);font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px}
+.wians{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.wia{padding:7px 14px;border-radius:8px;font-size:.9rem;border:1px solid transparent}
+.wia.uw{background:var(--wbg);border-color:rgba(231,76,60,.4);color:var(--wrong)}
+.wia.ca{background:var(--cbg);border-color:rgba(39,174,96,.4);color:var(--correct)}
+.wia-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;display:block;opacity:.7;margin-bottom:1px}
+.exp-sec{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.exp-hdr{font-size:.67rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.exp-hdr::before,.exp-hdr::after{content:'';flex:1;height:1px}
+.exp-hdr.wh{color:rgba(231,76,60,.85)}
+.exp-hdr.wh::before,.exp-hdr.wh::after{background:rgba(231,76,60,.25)}
+.exp-hdr.ch{color:rgba(39,174,96,.9)}
+.exp-hdr.ch::before,.exp-hdr.ch::after{background:rgba(39,174,96,.25)}
+.exp-wb{background:rgba(231,76,60,.07);border:1px solid rgba(231,76,60,.25);border-left:3px solid var(--wrong);border-radius:10px;padding:13px 17px;display:flex;flex-direction:column;gap:9px}
+.exp-wen{font-family:'Crimson Pro',serif;font-size:.96rem;color:rgba(255,200,200,.92);line-height:1.7;padding-bottom:9px;border-bottom:1px solid rgba(231,76,60,.15)}
+.exp-war{font-family:'Noto Naskh Arabic',serif;font-size:1.02rem;color:rgba(255,185,185,.88);line-height:1.9;text-align:right;direction:rtl}
+.exp-cb{background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.25);border-left:3px solid var(--correct);border-radius:10px;padding:13px 17px;display:flex;flex-direction:column;gap:9px}
+.exp-cen{font-family:'Crimson Pro',serif;font-size:.96rem;color:rgba(200,255,220,.92);line-height:1.7;padding-bottom:9px;border-bottom:1px solid rgba(39,174,96,.15)}
+.exp-car{font-family:'Noto Naskh Arabic',serif;font-size:1.02rem;color:rgba(185,255,205,.88);line-height:1.9;text-align:right;direction:rtl}
+.rftr{text-align:center;margin-top:32px}
+.btnr{background:transparent;border:2px solid var(--gold);color:var(--gold);border-radius:12px;padding:14px 38px;font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .28s;letter-spacing:.5px}
+.btnr:hover{background:var(--gold);color:var(--deep)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:4px}
+@media(max-width:600px){.card,.qcard,.rcard{padding:24px 16px}.qtxt{font-size:1.05rem}.srow{flex-wrap:wrap}.sb{min-width:calc(50% - 7px)}}
+</style>
+</head>
+<body>
+<canvas id="cvs"></canvas>
+<div class="nb nb1"></div>
+<div class="nb nb2"></div>
+<div class="nb nb3"></div>
+
+<!-- TELEGRAM -->
+<div id="tg-scr" class="scr hidden">
+  <div class="card">
+    <div class="badge">
+      <span class="uni">Al-Mustaqbal University &middot; Babylon</span>
+      <div class="gline"></div>
+      <span class="dept">Department of English Language</span>
+    </div>
+    <div class="tgico">📢</div>
+    <div class="tgtitle">Join Our Channel First</div>
+    <div class="tgsub">Please join the official Telegram channel of the English Language Department before accessing the quiz.</div>
+    <div class="tgcount" id="tgNum">5</div>
+    <div class="tglbl">Redirecting in seconds…</div><br>
+    <a href="https://t.me/vgsscwe" target="_blank" class="btntg">✈️ &nbsp;Join Telegram Channel</a><br>
+    <div style="font-size:.83rem;color:var(--gray);margin-top:11px;">You will be redirected to login automatically.</div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="lg-scr" class="scr hidden">
+  <div class="card">
+    <div class="badge">
+      <span class="uni">Al-Mustaqbal University &middot; Babylon &middot; 2025–2026</span>
+      <div class="gline"></div>
+      <span class="dept">Department of English Language — Grammar Quiz</span>
+    </div>
+    <div class="ltitle">Parts of Speech</div>
+    <div class="lsub">Form Classes &amp; Structure Classes<br>Enter your full four-part name to begin.</div>
+    <div class="iw">
+      <label>Full Name / الاسم الرباعي</label>
+      <input type="text" id="nameIn" placeholder="e.g. Ahmed Ali Hassan Mohammed" autocomplete="off">
+      <div class="nhint" id="nhint">0 / 4 parts entered</div>
+      <div class="nerr" id="nerr">⚠ Please enter your full four-part name.</div>
+    </div>
+    <button class="btnp" id="startBtn" disabled onclick="startQuiz()">Begin Quiz →</button>
+    <div class="pills">
+      <div class="pill"><div class="n">50</div><div class="l">Questions</div></div>
+      <div class="pill"><div class="n">50</div><div class="l">Marks</div></div>
+      <div class="pill"><div class="n">30</div><div class="l">Min Limit</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="qz-scr" class="scr hidden" style="align-items:flex-start;justify-content:center;">
+  <div class="qtop">
+    <div class="qctr">Question <span id="qn">1</span> of <span id="qt">50</span></div>
+    <div class="twrap"><span style="color:var(--gold)">⏱</span><span class="tdisp" id="tdisp">30:00</span></div>
+  </div>
+  <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
+  <div class="qcard">
+    <div class="ttag" id="ttag">Topic</div>
+    <div class="qtxt" id="qtxt">Loading…</div>
+    <div class="opts" id="opts"></div>
+    <div class="fbar">
+      <div class="fmsg" id="fmsg"></div>
+      <button class="btnn" id="btnn" onclick="nextQ()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="rs-scr" class="scr hidden" style="align-items:flex-start;justify-content:center;">
+  <div class="rcard">
+    <div class="rhdr">
+      <div class="rtitle">📋 Quiz Results</div>
+      <div class="rsname" id="rsname"></div>
+      <div class="gbadge" id="gbadge"></div>
+      <div class="ring-wrap">
+        <svg width="155" height="155" viewBox="0 0 155 155">
+          <circle class="rbg" cx="77.5" cy="77.5" r="67.5"/>
+          <circle class="rfill" id="rfill" cx="77.5" cy="77.5" r="67.5" stroke-dasharray="424.12" stroke-dashoffset="424.12"/>
+        </svg>
+        <div class="rctr"><span class="rpct" id="rpct">0</span><span class="rpct-sym">%</span></div>
+      </div>
+      <div class="srow">
+        <div class="sb o"><div class="sn" id="stot">50</div><div class="sl">Total</div></div>
+        <div class="sb g"><div class="sn" id="scor">0</div><div class="sl">Correct ✓</div></div>
+        <div class="sb r"><div class="sn" id="swrg">0</div><div class="sl">Wrong ✗</div></div>
+      </div>
+    </div>
+    <div class="wsec" id="wsec"></div>
+    <div class="rftr"><button class="btnr" onclick="retryQuiz()">↺ &nbsp;Retry Quiz</button></div>
+  </div>
+</div>
+
+<script>
+// ── STARS ──
+(function(){
+  var cv=document.getElementById('cvs'),ctx=cv.getContext('2d'),st=[];
+  function resize(){cv.width=innerWidth;cv.height=innerHeight;}
+  function init(){st=[];var n=Math.floor(cv.width*cv.height/6500);for(var i=0;i<n;i++)st.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.7+0.2,sp:Math.random()*0.007+0.003,ph:Math.random()*Math.PI*2});}
+  function draw(t){ctx.clearRect(0,0,cv.width,cv.height);for(var i=0;i<st.length;i++){var s=st[i],a=0.15+0.85*Math.abs(Math.sin(s.ph+t*s.sp));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+a.toFixed(3)+')';ctx.fill();}requestAnimationFrame(draw);}
+  window.addEventListener('resize',function(){resize();init();});
+  resize();init();draw(0);
+})();
+
+// ── 50 QUESTIONS (strictly from the PDF) ──
+var QB=[
+{t:"The groups of words that have lexical meaning, accept lexical endings, and serve different grammatical functions are called:",
+ o:["Structure classes","Form classes","Function words","Closed classes"],a:1,tp:"Form Classes",
+ wr:"Structure classes do not carry full lexical meaning and do not inflect. Function words and closed classes are related concepts but are not the correct technical term for this definition.",
+ cr:"FORM CLASSES are defined in the material as groups of words with lexical meaning, accepting lexical endings, and serving different grammatical functions in sentences.",
+ war:"أصناف البنية لا تحمل معنى معجمياً كاملاً ولا تتصرف. الكلمات الوظيفية والأصناف المغلقة مفاهيم مرتبطة لكنها ليست المصطلح الصحيح لهذا التعريف.",
+ car:"أصناف الصيغة هي المجموعات التي تحمل معنى معجمياً وتقبل اللواحق وتؤدي وظائف نحوية مختلفة — هذا هو التعريف الوارد في المادة."},
+
+{t:"English language has a set of _____ major form classes.",
+ o:["Three","Four","Five","Six"],a:2,tp:"Form Classes",
+ wr:"The material states clearly that English has neither three, four, nor six major form classes.",
+ cr:"The material states: 'English language has a set of FIVE major form classes' — nouns, verbs, adjectives, adverbs, and prepositions.",
+ war:"تنص المادة بوضوح على أن اللغة الإنجليزية ليست لديها ثلاثة أو أربعة أو ستة أصناف.",
+ car:"تنص المادة على أن اللغة الإنجليزية لديها خمسة أصناف رئيسية للصيغة."},
+
+{t:"Nouns are words that name people, places, things, or:",
+ o:["Actions","Abstract ideas","Qualities only","States of being"],a:1,tp:"Nouns",
+ wr:"Actions are expressed by verbs. Qualities alone and states of being describe other parts of speech. The material gives a specific fourth category for nouns.",
+ cr:"The material defines nouns as words naming people, places, things, or ABSTRACT IDEAS — such as freedom, justice, or love.",
+ war:"الأفعال هي التي تعبّر عن الأحداث. الصفات فقط والحالات تصف أجزاء أخرى من الكلام. تُعطي المادة فئة رابعة محددة للأسماء.",
+ car:"تُعرّف المادة الأسماء بأنها كلمات تسمّي الأشخاص والأماكن والأشياء والأفكار المجردة."},
+
+{t:"A word that can have Plural (−s or −es) and accepts Possessive 's is called a:",
+ o:["Verb","Adjective","Noun","Adverb"],a:2,tp:"Nouns",
+ wr:"Verbs take -ed/-ing; adjectives take -er/-est; adverbs take -ly. Only nouns have both plural and possessive features.",
+ cr:"The material states: 'A word that can have Plural (-s or -es) and accepts Possessive 's is called a NOUN.'",
+ war:"الأفعال تأخذ -ed/-ing؛ والصفات -er/-est؛ والظروف -ly. الأسماء فقط هي التي تملك خاصيتي الجمع والملكية.",
+ car:"تنص المادة: 'الكلمة التي تقبل الجمع (-s أو -es) وعلامة الملكية 's تسمى اسماً.'"},
+
+{t:"In 'The student is reading a book,' the underlined word (student) functions as a:",
+ o:["Object","Complement","Subject","Modifier"],a:2,tp:"Nouns",
+ wr:"The object receives action; the complement renames the subject after a linking verb; the modifier describes another word. Here 'student' performs the action.",
+ cr:"The material states this word functions as a SUBJECT — the doer of the action 'is reading'.",
+ war:"المفعول به يستقبل الفعل؛ والمكمّل يأتي بعد الفعل الرابط؛ والمُعدِّل يصف كلمة أخرى. هنا 'student' هو من يؤدي الفعل.",
+ car:"تنص المادة على أن هذه الكلمة تعمل فاعلاً — أي القائم بفعل القراءة."},
+
+{t:"In 'I like sport,' the underlined word (sport) functions as a(n):",
+ o:["Subject","Object","Complement","Gerund"],a:1,tp:"Nouns",
+ wr:"'I' is the subject. Sport is not a gerund (no -ing form), and 'like' is not a linking verb so there is no complement.",
+ cr:"The material states 'sport' functions as an OBJECT — it receives the action of 'like'. It answers: 'I like WHAT? → sport'.",
+ war:"'I' هو الفاعل. 'sport' لا تعمل gerund (لا صيغة -ing)، و'like' ليس فعلاً رابطاً فلا مكمّل.",
+ car:"تنص المادة على أن 'sport' تعمل مفعولاً به — تستقبل فعل 'like'. تجيب على: أحب ماذا؟ → الرياضة."},
+
+{t:"In 'He is a doctor,' the underlined word (doctor) functions as a:",
+ o:["Subject","Object","Complement","Modifier"],a:2,tp:"Nouns",
+ wr:"'He' is the subject. 'Doctor' does not receive an action (object), and does not describe another word (modifier). It follows the linking verb 'is'.",
+ cr:"The material states 'doctor' functions as a COMPLEMENT — it follows the linking verb 'is' and renames/identifies the subject 'He'.",
+ war:"'He' هو الفاعل. 'doctor' لا تستقبل فعلاً (مفعول)، ولا تصف كلمة أخرى (مُعدِّل). تأتي بعد الفعل الرابط 'is'.",
+ car:"تنص المادة على أن 'doctor' تعمل مكمّلاً — تأتي بعد الفعل الرابط 'is' وتُعيد تعريف الفاعل 'He'."},
+
+{t:"The noun 'acceptance' is derived from a:",
+ o:["Noun","Verb","Adjective","Adverb"],a:1,tp:"Nouns – Derivation",
+ wr:"'Acceptance' does not come from another noun, adjective, or adverb. The base word is a verb.",
+ cr:"The material states: 'The noun acceptance is derived from a VERB.' (accept + -ance = acceptance).",
+ war:"'acceptance' لا تأتي من اسم آخر أو صفة أو ظرف. كلمة الأساس فعل.",
+ car:"تنص المادة: 'الاسم acceptance مشتق من فعل.' (accept + -ance = acceptance)."},
+
+{t:"The noun 'decision' is derived from a:",
+ o:["Noun","Adjective","Verb","Pronoun"],a:2,tp:"Nouns – Derivation",
+ wr:"'Decision' does not come from a noun, adjective, or pronoun. Trace back: decide → decision.",
+ cr:"The material states: 'The noun decision is derived from a VERB.' (decide + -ion = decision).",
+ war:"'decision' لا تأتي من اسم أو صفة أو ضمير. ارجع إلى الجذر: decide → decision.",
+ car:"تنص المادة: 'الاسم decision مشتق من فعل.' (decide + -ion = decision)."},
+
+{t:"The noun 'importance' is derived from a:",
+ o:["Noun","Verb","Adjective","Adverb"],a:1,tp:"Nouns – Derivation",
+ wr:"Although related to 'important' (adjective), the material specifically states the derivation is from a verb, not an adjective.",
+ cr:"The material states: 'The noun importance is derived from a VERB.' (import + -ance = importance).",
+ war:"رغم ارتباطها بـ 'important' (صفة)، تنص المادة تحديداً على أن الاشتقاق من فعل لا من صفة.",
+ car:"تنص المادة: 'الاسم importance مشتق من فعل.' (import + -ance = importance)."},
+
+{t:"The noun 'booklet' is derived from a:",
+ o:["Verb","Noun","Adjective","Adverb"],a:1,tp:"Nouns – Derivation",
+ wr:"'Booklet' is not from a verb, adjective, or adverb. The base word 'book' is itself a noun.",
+ cr:"The material states: 'The noun booklet is derived from a NOUN.' (book + -let = booklet).",
+ war:"'booklet' ليست من فعل أو صفة أو ظرف. كلمة الأساس 'book' اسم.",
+ car:"تنص المادة: 'الاسم booklet مشتق من اسم.' (book + -let = booklet)."},
+
+{t:"The noun 'friendship' is derived from a:",
+ o:["Verb","Adjective","Noun","Pronoun"],a:2,tp:"Nouns – Derivation",
+ wr:"'Friendship' is not from a verb, adjective, or pronoun. The base 'friend' is a noun.",
+ cr:"The material states: 'The noun friendship is derived from a NOUN.' (friend + -ship = friendship).",
+ war:"'friendship' ليست من فعل أو صفة أو ضمير. الأساس 'friend' اسم.",
+ car:"تنص المادة: 'الاسم friendship مشتق من اسم.' (friend + -ship = friendship)."},
+
+{t:"The noun 'purity' is derived from an:",
+ o:["Noun","Verb","Adjective","Adverb"],a:2,tp:"Nouns – Derivation",
+ wr:"'Purity' is not from a noun, verb, or adverb. The base 'pure' is an adjective.",
+ cr:"The material states: 'The noun purity is derived from an ADJECTIVE.' (pure + -ity = purity).",
+ war:"'purity' ليست من اسم أو فعل أو ظرف. الأساس 'pure' صفة.",
+ car:"تنص المادة: 'الاسم purity مشتق من صفة.' (pure + -ity = purity)."},
+
+{t:"The noun 'wisdom' is derived from an:",
+ o:["Noun","Verb","Adverb","Adjective"],a:3,tp:"Nouns – Derivation",
+ wr:"'Wisdom' is not from a noun, verb, or adverb. The base 'wise' is an adjective.",
+ cr:"The material states: 'The noun wisdom is derived from an ADJECTIVE.' (wise + -dom = wisdom).",
+ war:"'wisdom' ليست من اسم أو فعل أو ظرف. الأساس 'wise' صفة.",
+ car:"تنص المادة: 'الاسم wisdom مشتق من صفة.' (wise + -dom = wisdom)."},
+
+{t:"Verbs are words that express actions or:",
+ o:["Qualities","Positions","States of being","Descriptions"],a:2,tp:"Verbs",
+ wr:"Qualities are for adjectives; positions relate to prepositions; descriptions belong to adjectives/adverbs. The material gives a specific second function for verbs.",
+ cr:"The material states: 'Verbs are words that express actions or STATES OF BEING.'",
+ war:"الصفات للصفات؛ والمواضع لحروف الجر؛ والأوصاف للصفات والظروف. تُعطي المادة وظيفة ثانية محددة للأفعال.",
+ car:"تنص المادة: 'الأفعال هي كلمات تعبّر عن الأحداث أو حالات الوجود.'"},
+
+{t:"Verbs have a maximum of _____ different inflectional forms.",
+ o:["Three","Four","Six","Five"],a:3,tp:"Verbs",
+ wr:"The material is specific: English verbs do not have three, four, or six inflectional forms as a maximum.",
+ cr:"The material states: 'Verbs have a maximum of FIVE different inflectional forms' — stem, past -ed, past participle -en/-ed, -ing, and -s (3rd person).",
+ war:"المادة محددة: الأفعال الإنجليزية ليس لديها ثلاث أو أربع أو ست صور تصريفية كحد أقصى.",
+ car:"تنص المادة: 'للأفعال حد أقصى خمس صور تصريفية مختلفة' — الجذع والماضي والمفعول المصدري و-ing والغائب."},
+
+{t:"In 'Mary speaks English well,' the underlined verb (speaks) functions as a:",
+ o:["Auxiliary verb","Main verb","Modal verb","Linking verb"],a:1,tp:"Verbs",
+ wr:"Auxiliaries support other verbs; modals express ability/possibility; linking verbs connect to a complement. 'Speaks' carries the full meaning itself.",
+ cr:"The material states: 'The underlined verb (speaks) functions as a MAIN VERB.'",
+ war:"الأفعال المساعدة تدعم أفعالاً أخرى؛ والشرطية تعبّر عن القدرة؛ والرابطة تربط بالمكمّل. 'speaks' تحمل المعنى الكامل بنفسها.",
+ car:"تنص المادة: 'الفعل المُسطَّر (speaks) يعمل فعلاً رئيسياً.'"},
+
+{t:"The girl has _____ a letter. (correct past participle of 'write')",
+ o:["Write","Writes","Wrote","Written"],a:3,tp:"Verbs",
+ wr:"'Write' is the stem; 'writes' is the 3rd person present; 'wrote' is the simple past. The form after 'has' must be the past participle.",
+ cr:"The material gives: 'The girl has WRITTEN a letter.' Written is the past participle of the irregular verb 'write'.",
+ war:"'write' الجذع؛ 'writes' الغائب المضارع؛ 'wrote' الماضي البسيط. الصورة بعد 'has' يجب أن تكون المفعول المصدري.",
+ car:"تُعطي المادة: 'The girl has WRITTEN a letter.' — written هو المفعول المصدري للفعل الشاذ 'write'."},
+
+{t:"In 'We have been shopping,' the underlined verb (have) functions as a(n):",
+ o:["Main verb","Adjective","Auxiliary verb","Determiner"],a:2,tp:"Verbs",
+ wr:"'Shopping' is the main verb here; 'have' is not an adjective or determiner. It supports the main verb.",
+ cr:"The material states: 'The underlined verb (have) functions as an AUXILIARY VERB.'",
+ war:"'shopping' هو الفعل الرئيسي هنا؛ 'have' ليست صفة أو أداة تحديد. إنها تدعم الفعل الرئيسي.",
+ car:"تنص المادة: 'الفعل المُسطَّر (have) يعمل فعلاً مساعداً.'"},
+
+{t:"The underlined verb 'go' has _____ inflected forms.",
+ o:["Two","Three","Four","Five"],a:3,tp:"Verbs",
+ wr:"'Go' has: go (stem), goes (-s), went (past), gone (past participle), going (-ing). That is more than two, three, or four.",
+ cr:"The material states: 'The underlined verb go has FIVE inflected forms' — go, goes, went, gone, going.",
+ war:"'go' لها: go (جذع)، goes (-s)، went (ماضٍ)، gone (مفعول مصدري)، going (-ing). هذا أكثر من اثنتين أو ثلاث أو أربع.",
+ car:"تنص المادة: 'الفعل go له خمس صور متصرفة' — go, goes, went, gone, going."},
+
+{t:"The verb 'beautify' is derived from a:",
+ o:["Noun","Verb","Adjective","Adverb"],a:0,tp:"Verbs – Derivation",
+ wr:"'Beautify' does not come from another verb, an adjective, or an adverb. The base word 'beauty' is a noun.",
+ cr:"The material states: 'The verb beautify is derived from a NOUN.' (beauty + -ify = beautify).",
+ war:"'beautify' لا تأتي من فعل آخر أو صفة أو ظرف. كلمة الأساس 'beauty' اسم.",
+ car:"تنص المادة: 'الفعل beautify مشتق من اسم.' (beauty + -ify = beautify)."},
+
+{t:"The verb 'lengthen' is derived from a:",
+ o:["Adjective","Noun","Verb","Pronoun"],a:1,tp:"Verbs – Derivation",
+ wr:"'Lengthen' does not come from an adjective, another verb, or a pronoun. The base 'length' is a noun.",
+ cr:"The material states: 'The verb lengthen is derived from a NOUN.' (length + -en = lengthen).",
+ war:"'lengthen' لا تأتي من صفة أو فعل آخر أو ضمير. الأساس 'length' اسم.",
+ car:"تنص المادة: 'الفعل lengthen مشتق من اسم.' (length + -en = lengthen)."},
+
+{t:"The verb 'save' is derived from an:",
+ o:["Noun","Verb","Adjective","Adverb"],a:2,tp:"Verbs – Derivation",
+ wr:"'Save' is not from a noun, another verb, or adverb. The connection is to the adjective 'safe' with a spelling change (f→v).",
+ cr:"The material states: 'The verb save is derived from an ADJECTIVE.' (safe → save, with f→v change).",
+ war:"'save' ليست من اسم أو فعل آخر أو ظرف. الارتباط بالصفة 'safe' مع تغيير إملائي (f←v).",
+ car:"تنص المادة: 'الفعل save مشتق من صفة.' (safe → save مع تغيير f←v)."},
+
+{t:"In 'This paragraph will weaken your paper,' the underlined word is derived from an:",
+ o:["Noun","Verb","Adjective","Adverb"],a:2,tp:"Verbs – Derivation",
+ wr:"'Weaken' is not from a noun, another verb, or adverb. It is built by adding -en to an adjective.",
+ cr:"The material states: the underlined word is derived from an ADJECTIVE. (weak + -en = weaken).",
+ war:"'weaken' ليست من اسم أو فعل آخر أو ظرف. تُبنى بإضافة -en إلى صفة.",
+ car:"تنص المادة: الكلمة المُسطَّرة مشتقة من صفة. (weak + -en = weaken)."},
+
+{t:"The derived verb of 'safe' is:",
+ o:["Savings","Save","Safety","Safely"],a:1,tp:"Verbs – Derivation",
+ wr:"'Savings' and 'safety' are nouns; 'safely' is an adverb. Only one option is the verb derived from the adjective 'safe'.",
+ cr:"The material states: 'The derived verb of safe is SAVE.' (safe → save).",
+ war:"'savings' و'safety' أسماء؛ 'safely' ظرف. فقط خيار واحد هو الفعل المشتق من الصفة 'safe'.",
+ car:"تنص المادة: 'الفعل المشتق من safe هو save.' (safe → save)."},
+
+{t:"In 'The mines had been swept away,' the underlined verb occurs in the:",
+ o:["Simple stem","Past tense","Past participle","Present participle"],a:2,tp:"Verbs",
+ wr:"The stem would be 'sweep'; the past tense is 'swept' alone; the present participle is 'sweeping'. Here 'swept' follows 'had been'.",
+ cr:"The material states: 'The underlined verb occurs in the PAST PARTICIPLE.' — 'swept' follows 'had been', a classic past participle position.",
+ war:"الجذع سيكون 'sweep'؛ والماضي 'swept' وحده؛ ومضارع المستمر 'sweeping'. هنا 'swept' تتبع 'had been'.",
+ car:"تنص المادة: 'الفعل المُسطَّر يأتي في صيغة المفعول المصدري.' — 'swept' تتبع 'had been' وهو موضع مفعول مصدري كلاسيكي."},
+
+{t:"A word inflected with −er and −est, capable of forming adverbs with −ly or nouns with −ness, is called a(n):",
+ o:["Adverb","Adjective","Noun","Verb"],a:1,tp:"Adjectives",
+ wr:"Adverbs usually end in -ly; nouns take -s/-'s; verbs take -ed/-ing. Only adjectives have all these features: -er/-est/-ly/-ness.",
+ cr:"The material states: 'A word inflected with -er and -est, and capable of forming adverbs with -ly or nouns with -ness is called an ADJECTIVE.'",
+ war:"الظروف تنتهي عادةً بـ -ly؛ والأسماء تأخذ -s/-'s؛ والأفعال -ed/-ing. الصفات فقط لديها كل هذه الخصائص.",
+ car:"تنص المادة: 'الكلمة المُعرَّبة بـ -er و-est والقادرة على تكوين ظروف بـ -ly أو أسماء بـ -ness تسمى صفة.'"},
+
+{t:"The adjective 'aged' is derived from a:",
+ o:["Verb","Adjective","Noun","Adverb"],a:2,tp:"Adjectives – Derivation",
+ wr:"'Aged' is not from a verb, another adjective, or adverb. The base word 'age' is a noun.",
+ cr:"The material states: 'The adjective aged is derived from a NOUN.' (age + -d/-ed = aged).",
+ war:"'aged' ليست من فعل أو صفة أخرى أو ظرف. كلمة الأساس 'age' اسم.",
+ car:"تنص المادة: 'الصفة aged مشتقة من اسم.' (age + -d/-ed = aged)."},
+
+{t:"The adjective 'cultural' is derived from a:",
+ o:["Verb","Noun","Adverb","Adjective"],a:1,tp:"Adjectives – Derivation",
+ wr:"'Cultural' is not from a verb, adverb, or another adjective. The base 'culture' is a noun.",
+ cr:"The material states: 'The adjective cultural is derived from a NOUN.' (culture + -al = cultural).",
+ war:"'cultural' ليست من فعل أو ظرف أو صفة أخرى. الأساس 'culture' اسم.",
+ car:"تنص المادة: 'الصفة cultural مشتقة من اسم.' (culture + -al = cultural)."},
+
+{t:"The adjective 'fortunate' is derived from a:",
+ o:["Verb","Adjective","Noun","Adverb"],a:2,tp:"Adjectives – Derivation",
+ wr:"'Fortunate' is not from a verb, another adjective, or adverb. The base 'fortune' is a noun.",
+ cr:"The material states: 'The adjective fortunate is derived from a NOUN.' (fortune + -ate = fortunate).",
+ war:"'fortunate' ليست من فعل أو صفة أخرى أو ظرف. الأساس 'fortune' اسم.",
+ car:"تنص المادة: 'الصفة fortunate مشتقة من اسم.' (fortune + -ate = fortunate)."},
+
+{t:"The adjective 'wooden' is derived from a:",
+ o:["Adjective","Noun","Verb","Adverb"],a:1,tp:"Adjectives – Derivation",
+ wr:"'Wooden' is not from another adjective, a verb, or an adverb. The base 'wood' is a noun.",
+ cr:"The material states: 'The adjective wooden is derived from a NOUN.' (wood + -en = wooden).",
+ war:"'wooden' ليست من صفة أخرى أو فعل أو ظرف. الأساس 'wood' اسم.",
+ car:"تنص المادة: 'الصفة wooden مشتقة من اسم.' (wood + -en = wooden)."},
+
+{t:"The adjective 'collective' is derived from a:",
+ o:["Verb","Adjective","Noun","Adverb"],a:0,tp:"Adjectives – Derivation",
+ wr:"'Collective' is not from an adjective, noun, or adverb. The base 'collect' is a verb.",
+ cr:"The material states: 'The adjective collective is derived from a VERB.' (collect + -ive = collective).",
+ war:"'collective' ليست من صفة أو اسم أو ظرف. الأساس 'collect' فعل.",
+ car:"تنص المادة: 'الصفة collective مشتقة من فعل.' (collect + -ive = collective)."},
+
+{t:"The adjective 'continual' is derived from a:",
+ o:["Noun","Verb","Adjective","Adverb"],a:1,tp:"Adjectives – Derivation",
+ wr:"'Continual' is not from a noun, another adjective, or adverb. The base 'continue' is a verb.",
+ cr:"The material states: 'The adjective continual is derived from a VERB.' (continue + -al = continual).",
+ war:"'continual' ليست من اسم أو صفة أخرى أو ظرف. الأساس 'continue' فعل.",
+ car:"تنص المادة: 'الصفة continual مشتقة من فعل.' (continue + -al = continual)."},
+
+{t:"The adjective 'deadly' is derived from an:",
+ o:["Noun","Verb","Adjective","Adverb"],a:2,tp:"Adjectives – Derivation",
+ wr:"'Deadly' is not from a noun, verb, or adverb. The base 'dead' is itself an adjective.",
+ cr:"The material states: 'The adjective deadly is derived from an ADJECTIVE.' (dead + -ly = deadly).",
+ war:"'deadly' ليست من اسم أو فعل أو ظرف. الأساس 'dead' صفة.",
+ car:"تنص المادة: 'الصفة deadly مشتقة من صفة.' (dead + -ly = deadly)."},
+
+{t:"The most commonly used suffix for forming English adverbs is:",
+ o:["−ness","−ward","−ly","−ful"],a:2,tp:"Adverbs",
+ wr:"-ness forms nouns (kindness); -ward forms directional adverbs but is much less common; -ful forms adjectives (helpful). The material names one dominant suffix.",
+ cr:"The material states: 'The most commonly used suffix for forming English adverbs is −LY.' (quickly, softly, carefully).",
+ war:"-ness تكوّن الأسماء؛ و-ward أقل شيوعاً؛ و-ful تكوّن الصفات. تُسمّي المادة لاحقة واحدة مهيمنة.",
+ car:"تنص المادة: 'أكثر اللواحق استخداماً لتكوين الظروف الإنجليزية هي −ly.' (quickly, softly, carefully)."},
+
+{t:"The adverb 'fortunately' is derived from an:",
+ o:["Noun","Verb","Adverb","Adjective"],a:3,tp:"Adverbs",
+ wr:"'Fortunately' is not from a noun, verb, or another adverb. The base 'fortunate' is an adjective.",
+ cr:"The material states: 'The adverb fortunately is derived from an ADJECTIVE.' (fortunate + -ly = fortunately).",
+ war:"'fortunately' ليست من اسم أو فعل أو ظرف آخر. الأساس 'fortunate' صفة.",
+ car:"تنص المادة: 'الظرف fortunately مشتق من صفة.' (fortunate + -ly = fortunately)."},
+
+{t:"In 'He looked cityward for a sign of the train,' the underlined word 'cityward' has a(n):",
+ o:["Adjectival position","Nominal position","Adverbial position","Verbal position"],a:2,tp:"Adverbs",
+ wr:"'Cityward' does not modify a noun (adjectival), is not itself a noun (nominal), and is not a verb. It tells us the direction of looking.",
+ cr:"The material states: 'The underlined word cityward has an ADVERBIAL POSITION.' It modifies the verb 'looked'.",
+ war:"'cityward' لا تعدّل اسماً (adjectival)، وليست اسماً (nominal)، وليست فعلاً. تُخبرنا اتجاه النظر.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة cityward لها موضع ظرفي.' تعدّل الفعل 'looked'."},
+
+{t:"In 'Mondays she sleeps late,' the underlined word 'Mondays' is:",
+ o:["Adjectival","Nominal","Adverbial","Verbal"],a:2,tp:"Adverbs",
+ wr:"'Mondays' does not modify a noun (adjectival), is not in a noun position (nominal), and is not a verb. It tells us WHEN she sleeps late.",
+ cr:"The material states: 'The underlined word Mondays is ADVERBIAL.' — it occupies an adverb of time position.",
+ war:"'Mondays' لا تعدّل اسماً (adjectival)، وليست في موضع اسمي (nominal)، وليست فعلاً. تُخبرنا متى تنام.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة Mondays ظرفية.' — تشغل موضع ظرف الزمان."},
+
+{t:"Members of a structure class are recognized mainly by:",
+ o:["Their inflectional forms","Position","Their suffixes","Their lexical meaning"],a:1,tp:"Structure Classes",
+ wr:"Structure class words rarely inflect, have no identifying suffixes, and carry little lexical meaning. Their recognition depends on something else.",
+ cr:"The material states: 'Members of a given structure class are recognized mainly by POSITION.'",
+ war:"كلمات أصناف البنية نادراً ما تتصرف، وليست لها لواحق مُعرِّفة، وتحمل معنى معجمي ضئيل. تعرّفها يعتمد على شيء آخر.",
+ car:"تنص المادة: 'أعضاء صنف البنية يُعرَّفون أساساً بالموضع.'"},
+
+{t:"A structure class has stable membership and is a _____ class.",
+ o:["Open","Major","Closed","Lexical"],a:2,tp:"Structure Classes",
+ wr:"Open classes accept new members regularly (nouns, verbs). 'Major' and 'lexical' do not describe the membership stability of structure classes.",
+ cr:"The material states: 'A structure class has a stable membership and is a CLOSED class, that is, it rarely admits new membership.'",
+ war:"الأصناف المفتوحة تقبل أعضاء جدداً (أسماء، أفعال). 'major' و'lexical' لا يصفان ثبات عضوية أصناف البنية.",
+ car:"تنص المادة: 'صنف البنية له عضوية ثابتة وهو صنف مغلق، أي أنه نادراً ما يقبل أعضاء جدداً.'"},
+
+{t:"A qualifier occurs in the position just _____ an adjectival or an adverbial.",
+ o:["After","Before","Within","At the end of"],a:1,tp:"Qualifiers",
+ wr:"Qualifiers cannot come after, within, or at the end of the word they modify. Their fixed position is what defines their function.",
+ cr:"The material states: 'A qualifier occurs in the position just BEFORE an adjectival or an adverbial.' (e.g., 'The party was rather interesting').",
+ war:"المُكيّفات لا تأتي بعد أو داخل أو في نهاية الكلمة التي تعدّلها. موضعها الثابت هو ما يُعرِّف وظيفتها.",
+ car:"تنص المادة: 'يأتي المُكيّف في الموضع مباشرةً قبل الصفة أو الظرف.' (مثل: 'The party was rather interesting')."},
+
+{t:"In 'The table was only inches wide,' the function of 'inches' is a:",
+ o:["Determiner","Preposition","Pronoun","Qualifier by position"],a:3,tp:"Qualifiers",
+ wr:"'Inches' is not a determiner (doesn't signal a noun alone), not a preposition (doesn't link nouns), and not a pronoun (doesn't replace a noun).",
+ cr:"The material states: 'The function of the underlined word inches is a QUALIFIER BY POSITION.' — it appears before the adjective 'wide'.",
+ war:"'inches' ليست أداة تحديد (لا تُشير إلى اسم وحدها)، وليست حرف جر (لا تربط الأسماء)، وليست ضميراً (لا تحل محل اسم).",
+ car:"تنص المادة: 'وظيفة الكلمة المُسطَّرة inches هي مُكيّف بحسب الموضع.' — تأتي قبل الصفة 'wide'."},
+
+{t:"In 'Are you completely happy with your courses?' the form class of the underlined qualifier is a(n):",
+ o:["Qualifier","Adjective","Adverb","Determiner"],a:2,tp:"Qualifiers",
+ wr:"'Qualifier' is a positional/functional label, not a form class. 'Completely' is not an adjective or determiner based on its form.",
+ cr:"The material states: 'The form class of the underlined qualifier is an ADVERB.' (complete + -ly = completely — an adverb in form).",
+ war:"'Qualifier' تصنيف وظيفي/موضعي وليس صنف صيغة. 'completely' ليست صفة أو أداة تحديد بناءً على شكلها.",
+ car:"تنص المادة: 'صنف الصيغة للمُكيّف المُسطَّر هو ظرف.' (complete + -ly = completely — ظرف في الصيغة)."},
+
+{t:"The word 'except' is considered a _____ preposition.",
+ o:["In","On","At","Two-syllable"],a:3,tp:"Prepositions",
+ wr:"'In', 'on', and 'at' are all one-syllable prepositions. The material classifies 'except' by the number of its syllables.",
+ cr:"The material states: 'The word except is considered a TWO-SYLLABLE preposition.' (ex-cept).",
+ war:"'in' و'on' و'at' كلها حروف جر أحادية المقطع. تُصنّف المادة 'except' بعدد مقاطعها.",
+ car:"تنص المادة: 'كلمة except تُعتبر حرف جر ثنائي المقطع.' (ex-cept)."},
+
+{t:"In 'Considering your loss, the bill will not be sent,' 'considering' is a(n):",
+ o:["−ed preposition","−ing preposition","Modal auxiliary","Qualifier"],a:1,tp:"Prepositions",
+ wr:"'Considering' ends in -ing, not -ed. It is not a modal auxiliary (which supports a main verb) or a qualifier (which precedes an adjective/adverb).",
+ cr:"The material states: 'The underlined word considering is an −ING PREPOSITION.'",
+ war:"'considering' تنتهي بـ -ing لا -ed. وليست مساعداً شرطياً (يدعم فعلاً رئيسياً) ولا مُكيّفاً (يسبق صفة/ظرف).",
+ car:"تنص المادة: 'الكلمة المُسطَّرة considering هي حرف جر بصيغة −ing.'"},
+
+{t:"A determiner precedes the noun and serves as a signal that the noun is:",
+ o:["Already mentioned","Soon to follow","Being modified","The subject"],a:1,tp:"Determiners",
+ wr:"The material does not say the determiner signals a noun already mentioned, being modified, or the subject. It signals what is coming.",
+ cr:"The material states: 'A determiner is a word that patterns with a noun. It precedes the noun and serves as a signal that the noun is SOON TO FOLLOW.'",
+ war:"لا تنص المادة على أن أداة التحديد تُشير إلى اسم مذكور سابقاً أو يُعدَّل أو هو الفاعل. إنها تُشير إلى ما هو قادم.",
+ car:"تنص المادة: 'أداة التحديد تسبق الاسم وتعمل إشارة إلى أن الاسم سيأتي قريباً.'"},
+
+{t:"In 'I thought I could help you,' the underlined word is a:",
+ o:["Main verb","Determiner","Modal auxiliary verb","Qualifier"],a:2,tp:"Auxiliaries",
+ wr:"'Could' is not the main verb (help is), not a determiner (doesn't signal a noun), and not a qualifier (doesn't intensify adjective/adverb).",
+ cr:"The material states: 'The underlined word is a MODAL AUXILIARY VERB.' 'Could' supports the main verb 'help'.",
+ war:"'could' ليست الفعل الرئيسي ('help' هو الرئيسي)، وليست أداة تحديد، وليست مُكيّفاً.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة هي فعل مساعد شرطي.' تدعم 'could' الفعل الرئيسي 'help'."},
+
+{t:"When immediately preceding the main verb, 'have' is followed by a:",
+ o:["Present participle","Past participle","Infinitive","Stem form"],a:1,tp:"Auxiliaries",
+ wr:"'Have' + present participle is not the perfect aspect. Have + infinitive or stem form is grammatically incorrect for the perfect.",
+ cr:"The material states: 'When immediately preceding the main verb, have is followed by a PAST PARTICIPLE.' (have written, has gone, had finished).",
+ war:"'have' + اسم فاعل حاضر ليست الجانب التام. have + مصدر أو جذع غير صحيح نحوياً للتام.",
+ car:"تنص المادة: 'حين يسبق الفعل الرئيسي مباشرةً، يتبع have مفعول مصدري.' (have written, has gone, had finished)."},
+
+{t:"The obligatory sequence of auxiliary verbs is:",
+ o:["have + modal + be","be + have + modal","modal + have + be","be + modal + have"],a:2,tp:"Auxiliaries",
+ wr:"The other sequences are all ungrammatical. There is only one correct obligatory order for English auxiliaries.",
+ cr:"The material states: 'The obligatory sequence of verbs is MODAL + HAVE + BE.' (e.g., could have been).",
+ war:"بقية التسلسلات كلها غير صحيحة نحوياً. يوجد ترتيب إلزامي واحد صحيح فقط للمساعدات الإنجليزية.",
+ car:"تنص المادة: 'الترتيب الإلزامي للأفعال هو modal + have + be.' (مثل: could have been)."},
+
+{t:"'The car could have been wrecked by the storm.' This sentence contains _____ auxiliary verbs.",
+ o:["One","Two","Three","Four"],a:2,tp:"Auxiliaries",
+ wr:"Counting one or two misses some auxiliaries. Identifying: 'could' (modal) + 'have' (perfect) + 'been' (passive) = three auxiliaries.",
+ cr:"The material states: 'This sentence contains THREE auxiliary verbs.' — could + have + been.",
+ war:"عدّ واحد أو اثنين يُفوّت بعض المساعدات. تحديد: 'could' (شرطي) + 'have' (تام) + 'been' (مجهول) = ثلاثة مساعدات.",
+ car:"تنص المادة: 'تحتوي هذه الجملة على ثلاثة أفعال مساعدة.' — could + have + been."},
+
+{t:"In 'The lawn mower is ours,' the underlined word is a:",
+ o:["Prenominal possessive","Interrogative pronoun","Substitutional possessive","Relative pronoun"],a:2,tp:"Pronouns",
+ wr:"A prenominal possessive comes before a noun (my car). An interrogative pronoun asks questions. A relative pronoun introduces a clause.",
+ cr:"The material states: 'The underlined word is SUBSTITUTIONAL POSSESSIVE.' — 'ours' stands alone without following noun.",
+ war:"الملكية قبل الاسم تأتي قبل اسم (my car). الاستفهامية تطرح أسئلة. الموصولة تُقدّم جملة.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة ملكية بديلية.' — 'ours' تقف وحدها بلا اسم بعدها."},
+
+{t:"In 'Who did you take to the theatre?' the underlined word is a(n):",
+ o:["Relative pronoun","Personal pronoun","Interrogative pronoun","Possessive pronoun"],a:2,tp:"Pronouns",
+ wr:"'Who' here starts a direct question, not a relative clause modifying a noun. It is not a personal or possessive pronoun.",
+ cr:"The material states: 'The underlined word is an INTERROGATIVE PRONOUN.' — it asks about a person.",
+ war:"'who' هنا تبدأ سؤالاً مباشراً وليس جملة موصولة تعدّل اسماً. وليست ضميراً شخصياً أو ملكياً.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة ضمير استفهام.' — تسأل عن شخص."},
+
+{t:"In 'The flavor that pleases me most is chocolate,' the function of 'that' is:",
+ o:["Object of verb","Subject of verb","Determiner","Qualifier"],a:1,tp:"Pronouns",
+ wr:"Test: 'that pleases me most' — who pleases me? = 'that' → it is the subject. Not a determiner (no noun follows alone) or qualifier.",
+ cr:"The material states: 'The function of that is SUBJECT OF VERB.' — in the clause 'that pleases me most', 'that' performs the verb 'pleases'.",
+ war:"اختبر: 'that pleases me most' — من يُرضيني؟ = 'that' ← هو الفاعل. وليست أداة تحديد (لا اسم يتبعها وحدها) ولا مُكيّف.",
+ car:"تنص المادة: 'وظيفة that هي فاعل الفعل.' — في الجملة 'that pleases me most' يؤدي 'that' وظيفة الفعل 'pleases'."},
+
+{t:"In 'The girl whom I admired most was Jack's sister,' the function of 'whom' is:",
+ o:["Subject of verb","Object of verb","Determiner","Qualifier"],a:1,tp:"Pronouns",
+ wr:"Test: 'I admired whom/her most' — 'I' is the subject; 'whom' receives the action. It is not a determiner or qualifier.",
+ cr:"The material states: 'The function of the underlined word whom is OBJECT OF VERB.' — in 'I admired whom most', 'whom' is the object.",
+ war:"اختبر: 'I admired whom/her most' — 'I' هو الفاعل؛ 'whom' يستقبل الفعل. وليست أداة تحديد أو مُكيّف.",
+ car:"تنص المادة: 'وظيفة الكلمة المُسطَّرة whom هي مفعول الفعل.' — في 'I admired whom most' هو المفعول به."},
+
+{t:"In 'This is my car,' the underlined word 'my' functions as a:",
+ o:["Substitutional possessive","Interrogative pronoun","Prenominal possessive","Relative pronoun"],a:2,tp:"Pronouns",
+ wr:"A substitutional possessive stands alone (ours, mine). An interrogative pronoun asks questions. A relative pronoun introduces a modifying clause.",
+ cr:"The material states: 'The underlined word my functions as a PRENOMINAL POSSESSIVE.' — it comes directly before the noun 'car'.",
+ war:"الملكية البديلية تقف وحدها (ours, mine). الاستفهامية تطرح أسئلة. الموصولة تُقدّم جملة معدِّلة.",
+ car:"تنص المادة: 'الكلمة المُسطَّرة my تعمل ملكية قبل الاسم.' — تأتي مباشرةً قبل الاسم 'car'."},
+
+{t:"Which of the following is a personal pronoun?",
+ o:["Who","She","Which","Whose"],a:1,tp:"Pronouns",
+ wr:"'Who', 'which', and 'whose' are interrogative or relative pronouns — they ask questions or introduce clauses. They do not refer to persons directly.",
+ cr:"The material states the answer is SHE. 'She' is a personal pronoun (3rd person singular feminine).",
+ war:"'who' و'which' و'whose' ضمائر استفهامية أو موصولة — تطرح أسئلة أو تُقدّم جملاً. لا تشير إلى أشخاص مباشرة.",
+ 
